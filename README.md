@@ -1,5 +1,7 @@
 # ManusMCP
 
+**Note**: Still WIP Feel free to contribute
+
 ## Usage
 
 - Manually:
