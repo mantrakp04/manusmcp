@@ -1,5 +1,29 @@
 # ManusMCP
 
+## Usage
+
+- Manually:
+
+  - Run Flowise: `npx flowise@latest start` (make sure to run it inside this directory)
+  - Open Flowise
+  - GoTo Agentflows
+  - Settings (Top Right)
+  - Import
+
+- Locally:
+
+  ```bash
+  bash start.sh
+  ```
+
+- In Docker:
+
+  ```bash
+  bash start.sh --docker
+  ```
+
+Recommended runtime: [`bun`](https://bun.sh/)
+
 ## Notes
 
 This project is currently in development with initial working functionality. The core components that could benefit from community contributions include:
