@@ -1,0 +1,17 @@
+pandas
+numpy
+scipy
+scikit-learn
+matplotlib
+plotly
+seaborn
+PyYAML
+openpyxl
+xlrd
+xlwt
+PyPDF2
+beautifulsoup4
+requests
+Pillow
+opencv-python
+spacy

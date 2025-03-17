@@ -1,4 +1,43 @@
-# 1. Custom Flowise Image
-# 2. Litellm
-# 3. Unstructured
-# 4. React Frontend
+# 1. Custom Flowise Image with a volume attached to the current directory
+# 2. Litellm docker run ghcr.io/berriai/litellm:main-latest --config your_config.yaml
+# 3. Unstructured docker run -p 8000:8000 -d --rm --name unstructured-api downloads.unstructured.io/unstructured-io/unstructured-api:latest
+
+version: '3.8'
+
+services:
+  # 1. Custom Flowise Image with a volume attached to the current directory
+  flowise:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/mnt/data
+    environment:
+      - PORT=3000
+      - FLOWISE_USERNAME=user
+      - FLOWISE_PASSWORD=password
+      - APIKEY_PATH=/mnt/data/.env
+    restart: unless-stopped
+
+  # 2. LiteLLM service
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    command: --config /app/config/your_config.yaml
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./config:/app/config
+    restart: unless-stopped
+
+  # 3. Unstructured API service
+  unstructured:
+    image: downloads.unstructured.io/unstructured-io/unstructured-api:latest
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+networks:
+  default:
+    name: flowise-network
