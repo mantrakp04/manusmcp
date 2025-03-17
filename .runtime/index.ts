@@ -92,7 +92,7 @@ server.tool(
   "shell_exec",
   {
     id: z.string(),
-    execDir: z.string(),
+    execDir: z.string().default("."),
     command: z.string()
   },
   async ({ id, execDir, command }) => {

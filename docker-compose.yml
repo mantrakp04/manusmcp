@@ -6,30 +6,30 @@ version: '3.8'
 
 services:
   # 1. Custom Flowise Image with a volume attached to the current directory
-  flowise:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./:/mnt/data
-    environment:
-      - PORT=3000
-      - FLOWISE_USERNAME=user
-      - FLOWISE_PASSWORD=password
-      - APIKEY_PATH=/mnt/data/.env
-    restart: unless-stopped
+  # flowise:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ./:/mnt/data
+  #   environment:
+  #     - PORT=3000
+  #     - FLOWISE_USERNAME=user
+  #     - FLOWISE_PASSWORD=password
+  #     - APIKEY_PATH=/mnt/data/.env
+  #   restart: unless-stopped
 
   # 2. LiteLLM service
-  litellm:
-    image: ghcr.io/berriai/litellm:main-latest
-    command: --config /app/config/your_config.yaml
-    ports:
-      - "4000:4000"
-    volumes:
-      - ./config:/app/config
-    restart: unless-stopped
+  # litellm:
+  #   image: ghcr.io/berriai/litellm:main-latest
+  #   command: --config /app/config/config.yml
+  #   ports:
+  #     - "4000:4000"
+  #   volumes:
+  #     - ./litellm:/app/config
+  #   restart: unless-stopped
 
   # 3. Unstructured API service
   unstructured:
