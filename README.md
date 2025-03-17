@@ -30,29 +30,28 @@ cd ..
 4. Click Settings (Top Right)
 5. Click Import and select the agent flow configuration file
 
-~~### Option 2: Run locally with script~~ WIP
+### Option 2: Run it with docker
 
 ```bash
-bash start.sh
+docker-compose up -d
 ```
 
-~~### Option 3: Run in Docker~~ WIP
+#### Import flow
 
 ```bash
-bash start.sh --docker
+curl -L \
+  --request POST \
+  --url 'http://localhost:3000/chatflows' \
+  --header 'Authorization: Bearer JWT' \
+  --header 'Content-Type: application/json' \
+  --data '@flow.json'
 ```
 
-### MCP Server
+### [Optional] Checkout the MCP Server
 
 ```bash
 cd .runtime
 bunx @modelcontextprotocol/inspector bun index.ts
-```
-
-### Unstructured API
-
-```bash
-docker-compose up -d
 ```
 
 Recommended runtime: [`bun`](https://bun.sh/)

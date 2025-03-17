@@ -33,6 +33,26 @@ server.tool(
 );
 
 server.tool(
+  "file_read_image",
+  {
+    file: z.string(),
+    sudo: z.boolean().optional()
+  },
+  async ({ file, sudo }) => {
+    const result = await fileService.readImageFile(file, sudo);
+    if (result.error) {
+      return { content: [{ type: "text", text: JSON.stringify(result) }] };
+    }
+    return MCPTypes.CallToolResultSchema.parse({
+      content: [
+        { type: "image", data: `data:${result.mimeType};base64,${result.imageContent}`},
+        { type: "text", text: JSON.stringify({ success: result.success }) }
+      ]
+    });
+  }
+);
+
+server.tool(
   "file_write",
   {
     file: z.string(),

@@ -35,6 +35,41 @@ export class FileService {
         }
     }
 
+    async readImageFile(
+        file: string,
+        sudo: boolean = false
+    ): Promise<FileOperationResult> {
+        try {
+            let buffer: Buffer;
+            if (sudo) {
+                const { stdout } = await execAsync(`sudo cat ${file}`);
+                buffer = Buffer.from(stdout);
+            } else {
+                buffer = await fs.readFile(file);
+            }
+            
+            const base64Image = buffer.toString('base64');
+            const extension = file.split('.').pop()?.toLowerCase() || 'png';
+            const mimeType = extension === 'jpg' || extension === 'jpeg' 
+                ? 'image/jpeg' 
+                : extension === 'png' 
+                    ? 'image/png' 
+                    : extension === 'gif' 
+                        ? 'image/gif' 
+                        : extension === 'webp' 
+                            ? 'image/webp' 
+                            : 'application/octet-stream';
+            
+            return { 
+                success: true,
+                imageContent: base64Image,
+                mimeType
+            };
+        } catch (e) {
+            return { error: e instanceof Error ? e.message : String(e) };
+        }
+    }
+
     async writeFile(
         file: string,
         content: string,

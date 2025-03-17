@@ -6,21 +6,25 @@ version: '3.8'
 
 services:
   # 1. Custom Flowise Image with a volume attached to the current directory
-  # flowise:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "3000:3000"
-  #   volumes:
-  #     - ./.cache/:/mnt/data
-  #   environment:
-  #     - DATABASE_PATH=/mnt/data/.cache/.flowise
-  #     - BLOB_STORAGE_PATH=/mnt/data/.cache/.flowise/storage
-  #     - LOG_PATH=/mnt/data/.cache/.flowise/logs
-  #     - LOG_LEVEL=info
-  #     - SECRETKEY_PATH=/mnt/data/.cache/.flowise/server
-  #   restart: unless-stopped
+  flowise:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./.cache/:/mnt/data
+    environment:
+      - PORT=3000
+      - DATABASE_PATH=/mnt/data/.flowise
+      - APIKEY_PATH=/mnt/data/.flowise
+      - SECRETKEY_PATH=/mnt/data/.flowise
+      - LOG_PATH=/mnt/data/.flowise/logs
+      - BLOB_STORAGE_PATH=/mnt/data/.flowise/storage
+      - DISABLE_FLOWISE_TELEMETRY=true
+      # - FLOWISE_USERNAME=user
+      # - FLOWISE_PASSWORD=1234
+    restart: unless-stopped
 
   # 2. LiteLLM service
   # litellm:

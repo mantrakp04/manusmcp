@@ -20,6 +20,8 @@ export interface FileOperationResult {
     success?: boolean;
     error?: string;
     content?: string;
+    imageContent?: string;
+    mimeType?: string;
     matches?: Array<{
         lineNumber: number;
         line: string;
