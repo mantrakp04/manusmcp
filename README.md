@@ -1,6 +1,6 @@
 # ManusMCP
 
-**Note**: Still WIP Feel free to contribute
+**Note**: Tested with claude 3.7
 
 ## Usage
 

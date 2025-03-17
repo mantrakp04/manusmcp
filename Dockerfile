@@ -1,22 +1,25 @@
-FROM node:22-slim
+# Stage 1: Build stage (node)
+FROM node:20-alpine AS nodebuild
 
-# Install required dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+USER root
 
-# Set working directory
-WORKDIR /app
+# Install dependencies
+RUN apk add --no-cache chromium git python3 py3-pip make g++ build-base cairo-dev pango-dev curl
 
-# Copy package files and install dependencies
-COPY .runtime/ .runtime/
-COPY start.sh .
+# Install latest Flowise globally (specific version can be set: flowise@1.0.0)
+RUN npm install -g -y bun && bun install -g -y flowise@latest
 
-# Make start.sh executable
-RUN chmod +x start.sh
+WORKDIR /mnt/data/.runtime
 
-# Expose the default Flowise port
-EXPOSE 3000
+COPY .runtime .
 
-# Set the entry point to the start.sh script
-ENTRYPOINT ["/app/start.sh"] 
+# Install dependencies
+RUN python -m venv .venv && \
+    .venv/bin/pip install --upgrade pip setuptools wheel && \
+    .venv/bin/pip install -r requirements.txt && \
+    bun install
+
+# Set the environment variable for Puppeteer to find Chromium
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
+ENTRYPOINT ["flowise", "start"]
