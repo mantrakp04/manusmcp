@@ -13,6 +13,7 @@ COPY .runtime .
 RUN apk add --no-cache chromium git python3 py3-pip make g++ build-base cairo-dev pango-dev curl \
     python3-dev openblas-dev lapack-dev gfortran pkgconfig && \
     curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    source $HOME/.local/bin/env && \
     uv sync && \
     npm install -g -y bun && \
     bun install -g -y flowise@latest

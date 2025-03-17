@@ -13,12 +13,13 @@ services:
   #   ports:
   #     - "3000:3000"
   #   volumes:
-  #     - ./:/mnt/data
+  #     - ./.cache/:/mnt/data
   #   environment:
-  #     - PORT=3000
-  #     - FLOWISE_USERNAME=user
-  #     - FLOWISE_PASSWORD=password
-  #     - APIKEY_PATH=/mnt/data/.env
+  #     - DATABASE_PATH=/mnt/data/.cache/.flowise
+  #     - BLOB_STORAGE_PATH=/mnt/data/.cache/.flowise/storage
+  #     - LOG_PATH=/mnt/data/.cache/.flowise/logs
+  #     - LOG_LEVEL=info
+  #     - SECRETKEY_PATH=/mnt/data/.cache/.flowise/server
   #   restart: unless-stopped
 
   # 2. LiteLLM service

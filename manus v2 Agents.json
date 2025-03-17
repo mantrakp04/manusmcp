@@ -797,7 +797,7 @@
           ],
           "model": "",
           "promptValues": "{\"plan\":\"$flow.state.plan\",\"input_docs\":\"$vars.input_docs\"}",
-          "llmStructuredOutput": "[{\"key\":\"next\",\"type\":\"Enum\",\"enumValues\":\"FINISH, FileWizard, CommandRunner, WebNavigator, PlanManager, Knowledgebase\",\"description\":\"\",\"actions\":\"\",\"id\":0},{\"key\":\"instruction\",\"type\":\"String\",\"enumValues\":\"\",\"description\":\"The specific instructions of the sub-task the next role should accomplish.\",\"actions\":\"\",\"id\":1}]",
+          "llmStructuredOutput": "[{\"key\":\"next\",\"type\":\"Enum\",\"enumValues\":\"FINISH, FileWizard, CommandRunner, WebNavigator, PlanManager, Knowledgebase, MessageNotifyUser, MessageAskUser\",\"description\":\"\",\"actions\":\"\",\"id\":0},{\"key\":\"instruction\",\"type\":\"String\",\"enumValues\":\"\",\"description\":\"The specific instructions of the sub-task the next role should accomplish.\",\"actions\":\"\",\"id\":1}]",
           "updateStateMemory": "updateStateMemoryUI",
           "updateStateMemoryUI": "[{\"key\":\"next\",\"value\":\"$flow.output.next\",\"actions\":\"\",\"id\":0},{\"key\":\"instruction\",\"value\":\"$flow.output.instruction\",\"actions\":\"\",\"id\":1}]"
         },
@@ -964,7 +964,7 @@
             "{{seqLLMNode_0.data.instance}}"
           ],
           "condition": "",
-          "conditionUI": "[{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"FileWizard\",\"output\":\"FileWizard\",\"actions\":\"\",\"id\":0},{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"CommandRunner\",\"output\":\"CommandRunner\",\"actions\":\"\",\"id\":1},{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"WebNavigator\",\"output\":\"WebNavigator\",\"actions\":\"\",\"id\":2},{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"PlanManager\",\"output\":\"PlanManager\",\"actions\":\"\",\"id\":3},{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"Knowledgebase\",\"output\":\"Knowledgebase\",\"actions\":\"\",\"id\":4}]",
+          "conditionUI": "[{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"FileWizard\",\"output\":\"FileWizard\",\"actions\":\"\",\"id\":0},{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"CommandRunner\",\"output\":\"CommandRunner\",\"actions\":\"\",\"id\":1},{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"WebNavigator\",\"output\":\"WebNavigator\",\"actions\":\"\",\"id\":2},{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"PlanManager\",\"output\":\"PlanManager\",\"actions\":\"\",\"id\":3},{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"Knowledgebase\",\"output\":\"Knowledgebase\",\"actions\":\"\",\"id\":4},{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"MessageNotifyUser\",\"output\":\"MessageNotifyUser\",\"actions\":\"\",\"id\":5},{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"MessageAskUser\",\"output\":\"MessageAskUser\",\"actions\":\"\",\"id\":6}]",
           "selectedConditionFunctionTab_seqCondition_0": "conditionUI"
         },
         "outputAnchors": [
@@ -1002,6 +1002,20 @@
                 "isAnchor": true
               },
               {
+                "id": "seqCondition_0-output-messageaskuser-Condition",
+                "name": "messageaskuser",
+                "label": "MessageAskUser",
+                "type": "Condition",
+                "isAnchor": true
+              },
+              {
+                "id": "seqCondition_0-output-messagenotifyuser-Condition",
+                "name": "messagenotifyuser",
+                "label": "MessageNotifyUser",
+                "type": "Condition",
+                "isAnchor": true
+              },
+              {
                 "id": "seqCondition_0-output-planmanager-Condition",
                 "name": "planmanager",
                 "label": "PlanManager",
@@ -1024,7 +1038,7 @@
         "selected": false
       },
       "width": 300,
-      "height": 679,
+      "height": 780,
       "positionAbsolute": {
         "x": 1364.3569235259827,
         "y": 773.9789288776261
@@ -1341,8 +1355,8 @@
     {
       "id": "seqAgent_2",
       "position": {
-        "x": 2056.6775115298065,
-        "y": 1834.5013471432849
+        "x": 2059.1378545976927,
+        "y": 3437.3928501960218
       },
       "type": "customNode",
       "data": {
@@ -1640,16 +1654,16 @@
       "height": 861,
       "selected": false,
       "positionAbsolute": {
-        "x": 2056.6775115298065,
-        "y": 1834.5013471432849
+        "x": 2059.1378545976927,
+        "y": 3437.3928501960218
       },
       "dragging": false
     },
     {
       "id": "seqLoop_0",
       "position": {
-        "x": 5536.811645697083,
-        "y": -263.17577982259047
+        "x": 2370.9307912602585,
+        "y": -331.1848845522789
       },
       "type": "customNode",
       "data": {
@@ -1685,11 +1699,7 @@
         ],
         "inputs": {
           "sequentialNode": [
-            "{{seqAgent_2.data.instance}}",
-            "{{seqLLMNode_1.data.instance}}",
-            "{{seqAgent_1.data.instance}}",
-            "{{seqAgent_0.data.instance}}",
-            "{{seqLLMNode_2.data.instance}}"
+            "{{seqAgent_1.data.instance}}"
           ],
           "loopToName": "Supervisor"
         },
@@ -1701,8 +1711,8 @@
       "height": 243,
       "selected": false,
       "positionAbsolute": {
-        "x": 5536.811645697083,
-        "y": -263.17577982259047
+        "x": 2370.9307912602585,
+        "y": -331.1848845522789
       },
       "dragging": false
     },
@@ -1710,7 +1720,7 @@
       "id": "customMCP_0",
       "position": {
         "x": 1362.6769191678477,
-        "y": 1458.1764218133294
+        "y": 1563.9973082797676
       },
       "type": "customNode",
       "data": {
@@ -1764,7 +1774,7 @@
       "selected": false,
       "positionAbsolute": {
         "x": 1362.6769191678477,
-        "y": 1458.1764218133294
+        "y": 1563.9973082797676
       },
       "dragging": false
     },
@@ -1772,7 +1782,7 @@
       "id": "braveSearchAPI_0",
       "position": {
         "x": 1363.4934731798487,
-        "y": 2289.67368813264
+        "y": 2395.494574599078
       },
       "type": "customNode",
       "data": {
@@ -1819,7 +1829,7 @@
       "selected": false,
       "positionAbsolute": {
         "x": 1363.4934731798487,
-        "y": 2289.67368813264
+        "y": 2395.494574599078
       },
       "dragging": false
     },
@@ -1994,8 +2004,8 @@
     {
       "id": "seqLLMNode_1",
       "position": {
-        "x": 2055.9054938464055,
-        "y": 1396.8904421760712
+        "x": 2058.365836914292,
+        "y": 2999.781945228808
       },
       "type": "customNode",
       "data": {
@@ -2264,8 +2274,8 @@
       "height": 433,
       "selected": false,
       "positionAbsolute": {
-        "x": 2055.9054938464055,
-        "y": 1396.8904421760712
+        "x": 2058.365836914292,
+        "y": 2999.781945228808
       },
       "dragging": false
     },
@@ -3861,8 +3871,8 @@
     {
       "id": "seqLoop_1",
       "position": {
-        "x": 5534.49879180844,
-        "y": -12.113332331033746
+        "x": 3333.45721213525,
+        "y": 1581.0118107432104
       },
       "type": "customNode",
       "data": {
@@ -3910,52 +3920,8 @@
       "height": 243,
       "selected": false,
       "positionAbsolute": {
-        "x": 5534.49879180844,
-        "y": -12.113332331033746
-      },
-      "dragging": false
-    },
-    {
-      "id": "seqEnd_1",
-      "position": {
-        "x": 3324.29099068111,
-        "y": 954.1977901200155
-      },
-      "type": "customNode",
-      "data": {
-        "id": "seqEnd_1",
-        "label": "End",
-        "version": 2.1,
-        "name": "seqEnd",
-        "type": "End",
-        "baseClasses": [
-          "End"
-        ],
-        "category": "Sequential Agents",
-        "description": "End conversation",
-        "inputParams": [],
-        "inputAnchors": [
-          {
-            "label": "Sequential Node",
-            "name": "sequentialNode",
-            "type": "Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
-            "description": "Can be connected to one of the following nodes: Agent, Condition, LLM Node, Tool Node, Custom Function, Execute Flow",
-            "id": "seqEnd_1-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
-          }
-        ],
-        "inputs": {
-          "sequentialNode": "{{seqConditionAgent_0.data.instance}}"
-        },
-        "outputAnchors": [],
-        "outputs": {},
-        "selected": false
-      },
-      "width": 300,
-      "height": 144,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 3324.29099068111,
-        "y": 954.1977901200155
+        "x": 3333.45721213525,
+        "y": 1581.0118107432104
       },
       "dragging": false
     },
@@ -4155,7 +4121,7 @@
         ],
         "inputs": {
           "cache": "",
-          "modelName": "claude-3-5-haiku-latest",
+          "modelName": "claude-3-7-sonnet-latest",
           "temperature": "0.2",
           "streaming": true,
           "maxTokensToSample": "",
@@ -4671,6 +4637,553 @@
         "y": 952.6633465296773
       },
       "dragging": false
+    },
+    {
+      "id": "seqLoop_2",
+      "position": {
+        "x": 2378.8216854961815,
+        "y": 696.6593454622882
+      },
+      "type": "customNode",
+      "data": {
+        "id": "seqLoop_2",
+        "label": "Loop",
+        "version": 2.1,
+        "name": "seqLoop",
+        "type": "Loop",
+        "baseClasses": [
+          "Loop"
+        ],
+        "category": "Sequential Agents",
+        "description": "Loop back to the specific sequential node",
+        "inputParams": [
+          {
+            "label": "Loop To",
+            "name": "loopToName",
+            "description": "Name of the agent/llm to loop back to",
+            "type": "string",
+            "placeholder": "Agent",
+            "id": "seqLoop_2-input-loopToName-string"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Sequential Node",
+            "name": "sequentialNode",
+            "type": "Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+            "description": "Can be connected to one of the following nodes: Agent, Condition, LLM Node, Tool Node, Custom Function, Execute Flow",
+            "list": true,
+            "id": "seqLoop_2-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+          }
+        ],
+        "inputs": {
+          "sequentialNode": [
+            "{{seqAgent_0.data.instance}}"
+          ],
+          "loopToName": "Supervisor"
+        },
+        "outputAnchors": [],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 243,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2378.8216854961815,
+        "y": 696.6593454622882
+      },
+      "dragging": false
+    },
+    {
+      "id": "seqLoop_3",
+      "position": {
+        "x": 2374.1493126711016,
+        "y": 3193.0454847838987
+      },
+      "type": "customNode",
+      "data": {
+        "id": "seqLoop_3",
+        "label": "Loop",
+        "version": 2.1,
+        "name": "seqLoop",
+        "type": "Loop",
+        "baseClasses": [
+          "Loop"
+        ],
+        "category": "Sequential Agents",
+        "description": "Loop back to the specific sequential node",
+        "inputParams": [
+          {
+            "label": "Loop To",
+            "name": "loopToName",
+            "description": "Name of the agent/llm to loop back to",
+            "type": "string",
+            "placeholder": "Agent",
+            "id": "seqLoop_3-input-loopToName-string"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Sequential Node",
+            "name": "sequentialNode",
+            "type": "Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+            "description": "Can be connected to one of the following nodes: Agent, Condition, LLM Node, Tool Node, Custom Function, Execute Flow",
+            "list": true,
+            "id": "seqLoop_3-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+          }
+        ],
+        "inputs": {
+          "sequentialNode": [
+            "{{seqLLMNode_1.data.instance}}"
+          ],
+          "loopToName": "Supervisor"
+        },
+        "outputAnchors": [],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 243,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2374.1493126711016,
+        "y": 3193.0454847838987
+      },
+      "dragging": false
+    },
+    {
+      "id": "seqLoop_4",
+      "position": {
+        "x": 2373.7895631033407,
+        "y": 4060.2088775670813
+      },
+      "type": "customNode",
+      "data": {
+        "id": "seqLoop_4",
+        "label": "Loop",
+        "version": 2.1,
+        "name": "seqLoop",
+        "type": "Loop",
+        "baseClasses": [
+          "Loop"
+        ],
+        "category": "Sequential Agents",
+        "description": "Loop back to the specific sequential node",
+        "inputParams": [
+          {
+            "label": "Loop To",
+            "name": "loopToName",
+            "description": "Name of the agent/llm to loop back to",
+            "type": "string",
+            "placeholder": "Agent",
+            "id": "seqLoop_4-input-loopToName-string"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Sequential Node",
+            "name": "sequentialNode",
+            "type": "Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+            "description": "Can be connected to one of the following nodes: Agent, Condition, LLM Node, Tool Node, Custom Function, Execute Flow",
+            "list": true,
+            "id": "seqLoop_4-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+          }
+        ],
+        "inputs": {
+          "sequentialNode": [
+            "{{seqAgent_2.data.instance}}"
+          ],
+          "loopToName": "Supervisor"
+        },
+        "outputAnchors": [],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 243,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2373.7895631033407,
+        "y": 4060.2088775670813
+      },
+      "dragging": false
+    },
+    {
+      "id": "seqLoop_5",
+      "position": {
+        "x": 3334.2343158672393,
+        "y": 947.1395513159023
+      },
+      "type": "customNode",
+      "data": {
+        "id": "seqLoop_5",
+        "label": "Loop",
+        "version": 2.1,
+        "name": "seqLoop",
+        "type": "Loop",
+        "baseClasses": [
+          "Loop"
+        ],
+        "category": "Sequential Agents",
+        "description": "Loop back to the specific sequential node",
+        "inputParams": [
+          {
+            "label": "Loop To",
+            "name": "loopToName",
+            "description": "Name of the agent/llm to loop back to",
+            "type": "string",
+            "placeholder": "Agent",
+            "id": "seqLoop_5-input-loopToName-string"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Sequential Node",
+            "name": "sequentialNode",
+            "type": "Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+            "description": "Can be connected to one of the following nodes: Agent, Condition, LLM Node, Tool Node, Custom Function, Execute Flow",
+            "list": true,
+            "id": "seqLoop_5-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+          }
+        ],
+        "inputs": {
+          "sequentialNode": [
+            "{{seqLLMNode_2.data.instance}}"
+          ],
+          "loopToName": "Supervisor"
+        },
+        "outputAnchors": [],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 243,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3334.2343158672393,
+        "y": 947.1395513159023
+      },
+      "dragging": false
+    },
+    {
+      "id": "seqCustomFunction_0",
+      "position": {
+        "x": 2057.82369899717,
+        "y": 2198.3180923883992
+      },
+      "type": "customNode",
+      "data": {
+        "id": "seqCustomFunction_0",
+        "label": "Custom JS Function",
+        "version": 1,
+        "name": "seqCustomFunction",
+        "type": "CustomFunction",
+        "baseClasses": [
+          "CustomFunction"
+        ],
+        "category": "Sequential Agents",
+        "description": "Execute custom javascript function",
+        "inputParams": [
+          {
+            "label": "Input Variables",
+            "name": "functionInputVariables",
+            "description": "Input variables can be used in the function with prefix $. For example: $var",
+            "type": "json",
+            "optional": true,
+            "acceptVariable": true,
+            "list": true,
+            "id": "seqCustomFunction_0-input-functionInputVariables-json"
+          },
+          {
+            "label": "Function Name",
+            "name": "functionName",
+            "type": "string",
+            "placeholder": "My Function",
+            "id": "seqCustomFunction_0-input-functionName-string"
+          },
+          {
+            "label": "Javascript Function",
+            "name": "javascriptFunction",
+            "type": "code",
+            "hint": {
+              "label": "How to use",
+              "value": "\n1. Must return a string value at the end of function.\n\n2. You can get default flow config, including the current \"state\":\n    - `$flow.sessionId`\n    - `$flow.chatId`\n    - `$flow.chatflowId`\n    - `$flow.input`\n    - `$flow.state`\n\n3. You can get custom variables: `$vars.<variable-name>`\n\n"
+            },
+            "id": "seqCustomFunction_0-input-javascriptFunction-code"
+          },
+          {
+            "label": "Return Value As",
+            "name": "returnValueAs",
+            "type": "options",
+            "options": [
+              {
+                "label": "AI Message",
+                "name": "aiMessage"
+              },
+              {
+                "label": "Human Message",
+                "name": "humanMessage"
+              },
+              {
+                "label": "State Object",
+                "name": "stateObj",
+                "description": "Return as state object, ex: { foo: bar }. This will update the custom state 'foo' to 'bar'"
+              }
+            ],
+            "default": "aiMessage",
+            "id": "seqCustomFunction_0-input-returnValueAs-options"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Sequential Node",
+            "name": "sequentialNode",
+            "type": "Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+            "description": "Can be connected to one of the following nodes: Start, Agent, Condition, LLM Node, Tool Node, Custom Function, Execute Flow",
+            "list": true,
+            "id": "seqCustomFunction_0-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+          }
+        ],
+        "inputs": {
+          "functionInputVariables": "",
+          "sequentialNode": [
+            "{{seqCondition_0.data.instance}}"
+          ],
+          "functionName": "MessageNotifyUser",
+          "javascriptFunction": "return String($flow.instruction)",
+          "returnValueAs": "aiMessage"
+        },
+        "outputAnchors": [
+          {
+            "id": "seqCustomFunction_0-output-seqCustomFunction-CustomFunction",
+            "name": "seqCustomFunction",
+            "label": "CustomFunction",
+            "description": "Execute custom javascript function",
+            "type": "CustomFunction"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 796,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2057.82369899717,
+        "y": 2198.3180923883992
+      },
+      "dragging": false
+    },
+    {
+      "id": "seqLoop_6",
+      "position": {
+        "x": 2371.974825600182,
+        "y": 2754.3261721807617
+      },
+      "type": "customNode",
+      "data": {
+        "id": "seqLoop_6",
+        "label": "Loop",
+        "version": 2.1,
+        "name": "seqLoop",
+        "type": "Loop",
+        "baseClasses": [
+          "Loop"
+        ],
+        "category": "Sequential Agents",
+        "description": "Loop back to the specific sequential node",
+        "inputParams": [
+          {
+            "label": "Loop To",
+            "name": "loopToName",
+            "description": "Name of the agent/llm to loop back to",
+            "type": "string",
+            "placeholder": "Agent",
+            "id": "seqLoop_6-input-loopToName-string"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Sequential Node",
+            "name": "sequentialNode",
+            "type": "Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+            "description": "Can be connected to one of the following nodes: Agent, Condition, LLM Node, Tool Node, Custom Function, Execute Flow",
+            "list": true,
+            "id": "seqLoop_6-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+          }
+        ],
+        "inputs": {
+          "sequentialNode": [
+            "{{seqCustomFunction_0.data.instance}}"
+          ],
+          "loopToName": "Supervisor"
+        },
+        "outputAnchors": [],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 243,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2371.974825600182,
+        "y": 2754.3261721807617
+      },
+      "dragging": false
+    },
+    {
+      "id": "seqEnd_1",
+      "position": {
+        "x": 2373.1990743114743,
+        "y": 2045.8827030042478
+      },
+      "type": "customNode",
+      "data": {
+        "id": "seqEnd_1",
+        "label": "End",
+        "version": 2.1,
+        "name": "seqEnd",
+        "type": "End",
+        "baseClasses": [
+          "End"
+        ],
+        "category": "Sequential Agents",
+        "description": "End conversation",
+        "inputParams": [],
+        "inputAnchors": [
+          {
+            "label": "Sequential Node",
+            "name": "sequentialNode",
+            "type": "Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+            "description": "Can be connected to one of the following nodes: Agent, Condition, LLM Node, Tool Node, Custom Function, Execute Flow",
+            "id": "seqEnd_1-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+          }
+        ],
+        "inputs": {
+          "sequentialNode": "{{seqCustomFunction_1.data.instance}}"
+        },
+        "outputAnchors": [],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 144,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2373.1990743114743,
+        "y": 2045.8827030042478
+      },
+      "dragging": false
+    },
+    {
+      "id": "seqCustomFunction_1",
+      "position": {
+        "x": 2055.738463485846,
+        "y": 1395.0996172862872
+      },
+      "type": "customNode",
+      "data": {
+        "id": "seqCustomFunction_1",
+        "label": "Custom JS Function",
+        "version": 1,
+        "name": "seqCustomFunction",
+        "type": "CustomFunction",
+        "baseClasses": [
+          "CustomFunction"
+        ],
+        "category": "Sequential Agents",
+        "description": "Execute custom javascript function",
+        "inputParams": [
+          {
+            "label": "Input Variables",
+            "name": "functionInputVariables",
+            "description": "Input variables can be used in the function with prefix $. For example: $var",
+            "type": "json",
+            "optional": true,
+            "acceptVariable": true,
+            "list": true,
+            "id": "seqCustomFunction_1-input-functionInputVariables-json"
+          },
+          {
+            "label": "Function Name",
+            "name": "functionName",
+            "type": "string",
+            "placeholder": "My Function",
+            "id": "seqCustomFunction_1-input-functionName-string"
+          },
+          {
+            "label": "Javascript Function",
+            "name": "javascriptFunction",
+            "type": "code",
+            "hint": {
+              "label": "How to use",
+              "value": "\n1. Must return a string value at the end of function.\n\n2. You can get default flow config, including the current \"state\":\n    - `$flow.sessionId`\n    - `$flow.chatId`\n    - `$flow.chatflowId`\n    - `$flow.input`\n    - `$flow.state`\n\n3. You can get custom variables: `$vars.<variable-name>`\n\n"
+            },
+            "id": "seqCustomFunction_1-input-javascriptFunction-code"
+          },
+          {
+            "label": "Return Value As",
+            "name": "returnValueAs",
+            "type": "options",
+            "options": [
+              {
+                "label": "AI Message",
+                "name": "aiMessage"
+              },
+              {
+                "label": "Human Message",
+                "name": "humanMessage"
+              },
+              {
+                "label": "State Object",
+                "name": "stateObj",
+                "description": "Return as state object, ex: { foo: bar }. This will update the custom state 'foo' to 'bar'"
+              }
+            ],
+            "default": "aiMessage",
+            "id": "seqCustomFunction_1-input-returnValueAs-options"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Sequential Node",
+            "name": "sequentialNode",
+            "type": "Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+            "description": "Can be connected to one of the following nodes: Start, Agent, Condition, LLM Node, Tool Node, Custom Function, Execute Flow",
+            "list": true,
+            "id": "seqCustomFunction_1-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+          }
+        ],
+        "inputs": {
+          "functionInputVariables": "",
+          "sequentialNode": [
+            "{{seqCondition_0.data.instance}}"
+          ],
+          "functionName": "MessageAskUser",
+          "javascriptFunction": "return String($flow.instruction)",
+          "returnValueAs": "aiMessage"
+        },
+        "outputAnchors": [
+          {
+            "id": "seqCustomFunction_1-output-seqCustomFunction-CustomFunction",
+            "name": "seqCustomFunction",
+            "label": "CustomFunction",
+            "description": "Execute custom javascript function",
+            "type": "CustomFunction"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 796,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2055.738463485846,
+        "y": 1395.0996172862872
+      },
+      "dragging": false
     }
   ],
   "edges": [
@@ -4705,15 +5218,6 @@
       "targetHandle": "seqCondition_0-input-sequentialNode-Start | Agent | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
       "type": "buttonedge",
       "id": "seqLLMNode_0-seqLLMNode_0-output-seqLLMNode-LLMNode-seqCondition_0-seqCondition_0-input-sequentialNode-Start | Agent | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
-    },
-    {
-      "source": "seqAgent_2",
-      "sourceHandle": "seqAgent_2-output-seqAgent-Agent",
-      "target": "seqLoop_0",
-      "targetHandle": "seqLoop_0-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
-      "type": "buttonedge",
-      "id": "seqAgent_2-seqAgent_2-output-seqAgent-Agent-seqLoop_0-seqLoop_0-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
-      "selected": false
     },
     {
       "source": "braveSearchAPI_0",
@@ -4788,15 +5292,6 @@
       "selected": false
     },
     {
-      "source": "seqLLMNode_1",
-      "sourceHandle": "seqLLMNode_1-output-seqLLMNode-LLMNode",
-      "target": "seqLoop_0",
-      "targetHandle": "seqLoop_0-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
-      "type": "buttonedge",
-      "id": "seqLLMNode_1-seqLLMNode_1-output-seqLLMNode-LLMNode-seqLoop_0-seqLoop_0-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
-      "selected": false
-    },
-    {
       "source": "seqCondition_0",
       "sourceHandle": "seqCondition_0-output-planmanager-Condition",
       "target": "seqLLMNode_1",
@@ -4820,23 +5315,6 @@
       "targetHandle": "seqLoop_0-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
       "type": "buttonedge",
       "id": "seqAgent_1-seqAgent_1-output-seqAgent-Agent-seqLoop_0-seqLoop_0-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
-    },
-    {
-      "source": "seqAgent_0",
-      "sourceHandle": "seqAgent_0-output-seqAgent-Agent",
-      "target": "seqLoop_0",
-      "targetHandle": "seqLoop_0-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
-      "type": "buttonedge",
-      "id": "seqAgent_0-seqAgent_0-output-seqAgent-Agent-seqLoop_0-seqLoop_0-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
-    },
-    {
-      "source": "seqLLMNode_2",
-      "sourceHandle": "seqLLMNode_2-output-seqLLMNode-LLMNode",
-      "target": "seqLoop_0",
-      "targetHandle": "seqLoop_0-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
-      "type": "buttonedge",
-      "id": "seqLLMNode_2-seqLLMNode_2-output-seqLLMNode-LLMNode-seqLoop_0-seqLoop_0-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
-      "selected": false
     },
     {
       "source": "seqLLMNode_3",
@@ -4863,15 +5341,6 @@
       "targetHandle": "seqLLMNode_2-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
       "type": "buttonedge",
       "id": "seqConditionAgent_0-seqConditionAgent_0-output-generate-Condition-seqLLMNode_2-seqLLMNode_2-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
-      "selected": false
-    },
-    {
-      "source": "seqConditionAgent_0",
-      "sourceHandle": "seqConditionAgent_0-output-end-Condition",
-      "target": "seqEnd_1",
-      "targetHandle": "seqEnd_1-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
-      "type": "buttonedge",
-      "id": "seqConditionAgent_0-seqConditionAgent_0-output-end-Condition-seqEnd_1-seqEnd_1-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
       "selected": false
     },
     {
@@ -4908,6 +5377,22 @@
       "id": "retrieverTool_0-retrieverTool_0-output-retrieverTool-RetrieverTool|DynamicTool|Tool|StructuredTool|Runnable-seqToolNode_0-seqToolNode_0-input-tools-Tool"
     },
     {
+      "source": "seqCondition_0",
+      "sourceHandle": "seqCondition_0-output-knowledgebase-Condition",
+      "target": "seqLLMNode_4",
+      "targetHandle": "seqLLMNode_4-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "type": "buttonedge",
+      "id": "seqCondition_0-seqCondition_0-output-knowledgebase-Condition-seqLLMNode_4-seqLLMNode_4-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+    },
+    {
+      "source": "seqAgent_0",
+      "sourceHandle": "seqAgent_0-output-seqAgent-Agent",
+      "target": "seqLoop_2",
+      "targetHandle": "seqLoop_2-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "type": "buttonedge",
+      "id": "seqAgent_0-seqAgent_0-output-seqAgent-Agent-seqLoop_2-seqLoop_2-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+    },
+    {
       "source": "seqLLMNode_4",
       "sourceHandle": "seqLLMNode_4-output-seqLLMNode-LLMNode",
       "target": "seqToolNode_0",
@@ -4916,12 +5401,64 @@
       "id": "seqLLMNode_4-seqLLMNode_4-output-seqLLMNode-LLMNode-seqToolNode_0-seqToolNode_0-input-llmNode-LLMNode"
     },
     {
-      "source": "seqCondition_0",
-      "sourceHandle": "seqCondition_0-output-knowledgebase-Condition",
-      "target": "seqLLMNode_4",
-      "targetHandle": "seqLLMNode_4-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "source": "seqLLMNode_1",
+      "sourceHandle": "seqLLMNode_1-output-seqLLMNode-LLMNode",
+      "target": "seqLoop_3",
+      "targetHandle": "seqLoop_3-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
       "type": "buttonedge",
-      "id": "seqCondition_0-seqCondition_0-output-knowledgebase-Condition-seqLLMNode_4-seqLLMNode_4-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+      "id": "seqLLMNode_1-seqLLMNode_1-output-seqLLMNode-LLMNode-seqLoop_3-seqLoop_3-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "selected": false
+    },
+    {
+      "source": "seqAgent_2",
+      "sourceHandle": "seqAgent_2-output-seqAgent-Agent",
+      "target": "seqLoop_4",
+      "targetHandle": "seqLoop_4-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "type": "buttonedge",
+      "id": "seqAgent_2-seqAgent_2-output-seqAgent-Agent-seqLoop_4-seqLoop_4-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "selected": false
+    },
+    {
+      "source": "seqLLMNode_2",
+      "sourceHandle": "seqLLMNode_2-output-seqLLMNode-LLMNode",
+      "target": "seqLoop_5",
+      "targetHandle": "seqLoop_5-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "type": "buttonedge",
+      "id": "seqLLMNode_2-seqLLMNode_2-output-seqLLMNode-LLMNode-seqLoop_5-seqLoop_5-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+    },
+    {
+      "source": "seqCustomFunction_0",
+      "sourceHandle": "seqCustomFunction_0-output-seqCustomFunction-CustomFunction",
+      "target": "seqLoop_6",
+      "targetHandle": "seqLoop_6-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "type": "buttonedge",
+      "id": "seqCustomFunction_0-seqCustomFunction_0-output-seqCustomFunction-CustomFunction-seqLoop_6-seqLoop_6-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "selected": false
+    },
+    {
+      "source": "seqCustomFunction_1",
+      "sourceHandle": "seqCustomFunction_1-output-seqCustomFunction-CustomFunction",
+      "target": "seqEnd_1",
+      "targetHandle": "seqEnd_1-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "type": "buttonedge",
+      "id": "seqCustomFunction_1-seqCustomFunction_1-output-seqCustomFunction-CustomFunction-seqEnd_1-seqEnd_1-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "selected": false
+    },
+    {
+      "source": "seqCondition_0",
+      "sourceHandle": "seqCondition_0-output-messageaskuser-Condition",
+      "target": "seqCustomFunction_1",
+      "targetHandle": "seqCustomFunction_1-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "type": "buttonedge",
+      "id": "seqCondition_0-seqCondition_0-output-messageaskuser-Condition-seqCustomFunction_1-seqCustomFunction_1-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+    },
+    {
+      "source": "seqCondition_0",
+      "sourceHandle": "seqCondition_0-output-messagenotifyuser-Condition",
+      "target": "seqCustomFunction_0",
+      "targetHandle": "seqCustomFunction_0-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "type": "buttonedge",
+      "id": "seqCondition_0-seqCondition_0-output-messagenotifyuser-Condition-seqCustomFunction_0-seqCustomFunction_0-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
     }
   ]
 }
