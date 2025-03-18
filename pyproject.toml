@@ -4,7 +4,13 @@ version = "0.0.2"
 description = "A ManusMCP project"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = [ "mcp>=1.4.1",]
+dependencies = [
+ "fastapi>=0.115.11",
+ "gradio-client>=1.8.0",
+ "litellm[proxy]>=1.63.11",
+ "mcp[cli]>=1.4.1",
+ "playwright>=1.51.0",
+]
 [[project.authors]]
 name = "BarrelOfLube"
 email = "mantrakp04@gmail.com"
