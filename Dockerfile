@@ -46,4 +46,4 @@ WORKDIR /app
 CMD bash .runtime/start.sh
 
 # docker build -t manusmcp .
-# docker run -p 8000:8000 -p 4000:4000 -p 3000:3000 -p 8080:8080 --env-file .env -v $(pwd)/.run1:/app manusmcp
+# docker run -p 8000:8000 -p 4000:4000 -p 8080:8080 --env-file .env -v $(pwd)/.run1:/app manusmcp
