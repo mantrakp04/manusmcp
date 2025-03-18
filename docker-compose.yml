@@ -17,7 +17,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8002:8000"
-      - "3000:3000"
+      - "8005:3000"
     restart: unless-stopped
 
   # 3. Unstructured API service
@@ -34,7 +34,7 @@ services:
     ports:
       - "8004:4000"
     volumes:
-      - ./:/app/config
+      - ./litellm.yml:/app/config/litellm.yml
     restart: unless-stopped
     env_file:
       - .env

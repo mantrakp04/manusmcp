@@ -36,7 +36,20 @@ export class FileService {
                 content = lines.slice(start, end).join('\n');
             }
 
-            return { content };
+            const result: FileOperationResult = { content };
+            
+            if (this.shellService.isNextJSRuntimeAttached() && this.shellService.isLinterEnabled()) {
+                const lintResult = await this.shellService.runLinter();
+                
+                // Include lint results in the response
+                result.lintResult = {
+                    success: lintResult.success ?? false,
+                    output: lintResult.lintOutput,
+                    returnCode: lintResult.lintReturnCode
+                };
+            }
+
+            return result;
         } catch (e) {
             return { error: e instanceof Error ? e.message : String(e) };
         }
@@ -79,7 +92,7 @@ export class FileService {
 
     async writeFile(
         file: string,
-        content: string,
+        content: string = '',
         append: boolean = false,
         leadingNewline: boolean = false,
         trailingNewline: boolean = false,
@@ -95,7 +108,7 @@ export class FileService {
                 await execAsync(`sudo bash -c "echo '${finalContent}' ${mode} ${file}"`);
             } else {
                 const flag = append ? 'a' : 'w';
-                await fs.writeFile(file, finalContent, { flag });
+                await fs.writeFile(file, finalContent || '', { flag });
             }
 
             // Run linter if NextJS runtime is attached and linter is enabled

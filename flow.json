@@ -55,312 +55,6 @@
       "dragging": false
     },
     {
-      "id": "seqAgent_0",
-      "position": {
-        "x": 2056.8432419957353,
-        "y": 77.44623768710233
-      },
-      "type": "customNode",
-      "data": {
-        "id": "seqAgent_0",
-        "label": "Agent",
-        "version": 4.1,
-        "name": "seqAgent",
-        "type": "Agent",
-        "baseClasses": [
-          "Agent"
-        ],
-        "category": "Sequential Agents",
-        "description": "Agent that can execute tools",
-        "inputParams": [
-          {
-            "label": "Agent Name",
-            "name": "agentName",
-            "type": "string",
-            "placeholder": "Agent",
-            "id": "seqAgent_0-input-agentName-string"
-          },
-          {
-            "label": "System Prompt",
-            "name": "systemMessagePrompt",
-            "type": "string",
-            "rows": 4,
-            "optional": true,
-            "default": "You are a research assistant who can search for up-to-date info using search engine.",
-            "id": "seqAgent_0-input-systemMessagePrompt-string"
-          },
-          {
-            "label": "Prepend Messages History",
-            "name": "messageHistory",
-            "description": "Prepend a list of messages between System Prompt and Human Prompt. This is useful when you want to provide few shot examples",
-            "type": "code",
-            "hideCodeExecute": true,
-            "codeExample": "const { AIMessage, HumanMessage, ToolMessage } = require('@langchain/core/messages');\n\nreturn [\n    new HumanMessage(\"What is 333382 🦜 1932?\"),\n    new AIMessage({\n        content: \"\",\n        tool_calls: [\n        {\n            id: \"12345\",\n            name: \"calulator\",\n            args: {\n                number1: 333382,\n                number2: 1932,\n                operation: \"divide\",\n            },\n        },\n        ],\n    }),\n    new ToolMessage({\n        tool_call_id: \"12345\",\n        content: \"The answer is 172.558.\",\n    }),\n    new AIMessage(\"The answer is 172.558.\"),\n]",
-            "optional": true,
-            "additionalParams": true,
-            "id": "seqAgent_0-input-messageHistory-code"
-          },
-          {
-            "label": "Conversation History",
-            "name": "conversationHistorySelection",
-            "type": "options",
-            "options": [
-              {
-                "label": "User Question",
-                "name": "user_question",
-                "description": "Use the user question from the historical conversation messages as input."
-              },
-              {
-                "label": "Last Conversation Message",
-                "name": "last_message",
-                "description": "Use the last conversation message from the historical conversation messages as input."
-              },
-              {
-                "label": "All Conversation Messages",
-                "name": "all_messages",
-                "description": "Use all conversation messages from the historical conversation messages as input."
-              },
-              {
-                "label": "Empty",
-                "name": "empty",
-                "description": "Do not use any messages from the conversation history. Ensure to use either System Prompt, Human Prompt, or Messages History."
-              }
-            ],
-            "default": "all_messages",
-            "optional": true,
-            "description": "Select which messages from the conversation history to include in the prompt. The selected messages will be inserted between the System Prompt (if defined) and [Messages History, Human Prompt].",
-            "additionalParams": true,
-            "id": "seqAgent_0-input-conversationHistorySelection-options"
-          },
-          {
-            "label": "Human Prompt",
-            "name": "humanMessagePrompt",
-            "type": "string",
-            "description": "This prompt will be added at the end of the messages as human message",
-            "rows": 4,
-            "optional": true,
-            "additionalParams": true,
-            "id": "seqAgent_0-input-humanMessagePrompt-string"
-          },
-          {
-            "label": "Require Approval",
-            "name": "interrupt",
-            "description": "Pause execution and request user approval before running tools.\nIf enabled, the agent will prompt the user with customizable approve/reject options\nand will proceed only after approval. This requires a configured agent memory to manage\nthe state and handle approval requests.\nIf no tools are invoked, the agent proceeds without interruption.",
-            "type": "boolean",
-            "optional": true,
-            "id": "seqAgent_0-input-interrupt-boolean"
-          },
-          {
-            "label": "Format Prompt Values",
-            "name": "promptValues",
-            "description": "Assign values to the prompt variables. You can also use $flow.state.<variable-name> to get the state value",
-            "type": "json",
-            "optional": true,
-            "acceptVariable": true,
-            "list": true,
-            "id": "seqAgent_0-input-promptValues-json"
-          },
-          {
-            "label": "Approval Prompt",
-            "name": "approvalPrompt",
-            "description": "Prompt for approval. Only applicable if \"Require Approval\" is enabled",
-            "type": "string",
-            "default": "You are about to execute tool: {tools}. Ask if user want to proceed",
-            "rows": 4,
-            "optional": true,
-            "additionalParams": true,
-            "id": "seqAgent_0-input-approvalPrompt-string"
-          },
-          {
-            "label": "Approve Button Text",
-            "name": "approveButtonText",
-            "description": "Text for approve button. Only applicable if \"Require Approval\" is enabled",
-            "type": "string",
-            "default": "Yes",
-            "optional": true,
-            "additionalParams": true,
-            "id": "seqAgent_0-input-approveButtonText-string"
-          },
-          {
-            "label": "Reject Button Text",
-            "name": "rejectButtonText",
-            "description": "Text for reject button. Only applicable if \"Require Approval\" is enabled",
-            "type": "string",
-            "default": "No",
-            "optional": true,
-            "additionalParams": true,
-            "id": "seqAgent_0-input-rejectButtonText-string"
-          },
-          {
-            "label": "Update State",
-            "name": "updateStateMemory",
-            "type": "tabs",
-            "tabIdentifier": "selectedUpdateStateMemoryTab",
-            "additionalParams": true,
-            "default": "updateStateMemoryUI",
-            "tabs": [
-              {
-                "label": "Update State (Table)",
-                "name": "updateStateMemoryUI",
-                "type": "datagrid",
-                "hint": {
-                  "label": "How to use",
-                  "value": "\n1. Key and value pair to be updated. For example: if you have the following State:\n    | Key       | Operation     | Default Value     |\n    |-----------|---------------|-------------------|\n    | user      | Replace       |                   |\n\n    You can update the \"user\" value with the following:\n    | Key       | Value     |\n    |-----------|-----------|\n    | user      | john doe  |\n\n2. If you want to use the Agent's output as the value to update state, it is available as available as `$flow.output` with the following structure:\n    ```json\n    {\n        \"content\": \"Hello! How can I assist you today?\",\n        \"usedTools\": [\n            {\n                \"tool\": \"tool-name\",\n                \"toolInput\": \"{foo: var}\",\n                \"toolOutput\": \"This is the tool's output\"\n            }\n        ],\n        \"sourceDocuments\": [\n            {\n                \"pageContent\": \"This is the page content\",\n                \"metadata\": \"{foo: var}\"\n            }\n        ]\n    }\n    ```\n\n    For example, if the `toolOutput` is the value you want to update the state with, you can do the following:\n    | Key       | Value                                     |\n    |-----------|-------------------------------------------|\n    | user      | `$flow.output.usedTools[0].toolOutput`  |\n\n3. You can get default flow config, including the current \"state\":\n    - `$flow.sessionId`\n    - `$flow.chatId`\n    - `$flow.chatflowId`\n    - `$flow.input`\n    - `$flow.state`\n\n4. You can get custom variables: `$vars.<variable-name>`\n\n"
-                },
-                "description": "This is only applicable when you have a custom State at the START node. After agent execution, you might want to update the State values",
-                "datagrid": [
-                  {
-                    "field": "key",
-                    "headerName": "Key",
-                    "type": "asyncSingleSelect",
-                    "loadMethod": "loadStateKeys",
-                    "flex": 0.5,
-                    "editable": true
-                  },
-                  {
-                    "field": "value",
-                    "headerName": "Value",
-                    "type": "freeSolo",
-                    "valueOptions": [
-                      {
-                        "label": "Agent Output (string)",
-                        "value": "$flow.output.content"
-                      },
-                      {
-                        "label": "Used Tools (array)",
-                        "value": "$flow.output.usedTools"
-                      },
-                      {
-                        "label": "First Tool Output (string)",
-                        "value": "$flow.output.usedTools[0].toolOutput"
-                      },
-                      {
-                        "label": "Source Documents (array)",
-                        "value": "$flow.output.sourceDocuments"
-                      },
-                      {
-                        "label": "Global variable (string)",
-                        "value": "$vars.<variable-name>"
-                      },
-                      {
-                        "label": "Input Question (string)",
-                        "value": "$flow.input"
-                      },
-                      {
-                        "label": "Session Id (string)",
-                        "value": "$flow.sessionId"
-                      },
-                      {
-                        "label": "Chat Id (string)",
-                        "value": "$flow.chatId"
-                      },
-                      {
-                        "label": "Chatflow Id (string)",
-                        "value": "$flow.chatflowId"
-                      }
-                    ],
-                    "editable": true,
-                    "flex": 1
-                  }
-                ],
-                "optional": true,
-                "additionalParams": true
-              },
-              {
-                "label": "Update State (Code)",
-                "name": "updateStateMemoryCode",
-                "type": "code",
-                "hint": {
-                  "label": "How to use",
-                  "value": "\n1. Return the key value JSON object. For example: if you have the following State:\n    ```json\n    {\n        \"user\": null\n    }\n    ```\n\n    You can update the \"user\" value by returning the following:\n    ```js\n    return {\n        \"user\": \"john doe\"\n    }\n    ```\n\n2. If you want to use the agent's output as the value to update state, it is available as `$flow.output` with the following structure:\n    ```json\n    {\n        \"content\": \"Hello! How can I assist you today?\",\n        \"usedTools\": [\n            {\n                \"tool\": \"tool-name\",\n                \"toolInput\": \"{foo: var}\",\n                \"toolOutput\": \"This is the tool's output\"\n            }\n        ],\n        \"sourceDocuments\": [\n            {\n                \"pageContent\": \"This is the page content\",\n                \"metadata\": \"{foo: var}\"\n            }\n        ]\n    }\n    ```\n\n    For example, if the `toolOutput` is the value you want to update the state with, you can return the following:\n    ```js\n    return {\n        \"user\": $flow.output.usedTools[0].toolOutput\n    }\n    ```\n\n3. You can also get default flow config, including the current \"state\":\n    - `$flow.sessionId`\n    - `$flow.chatId`\n    - `$flow.chatflowId`\n    - `$flow.input`\n    - `$flow.state`\n\n4. You can get custom variables: `$vars.<variable-name>`\n\n"
-                },
-                "description": "This is only applicable when you have a custom State at the START node. After agent execution, you might want to update the State values. Must return an object representing the state",
-                "hideCodeExecute": true,
-                "codeExample": "const result = $flow.output;\n\n/* Suppose we have a custom State schema like this:\n* {\n    aggregate: {\n        value: (x, y) => x.concat(y),\n        default: () => []\n    }\n  }\n*/\n\nreturn {\n  aggregate: [result.content]\n};",
-                "optional": true,
-                "additionalParams": true
-              }
-            ],
-            "id": "seqAgent_0-input-updateStateMemory-tabs"
-          },
-          {
-            "label": "Max Iterations",
-            "name": "maxIterations",
-            "type": "number",
-            "optional": true,
-            "additionalParams": true,
-            "id": "seqAgent_0-input-maxIterations-number"
-          }
-        ],
-        "inputAnchors": [
-          {
-            "label": "Tools",
-            "name": "tools",
-            "type": "Tool",
-            "list": true,
-            "optional": true,
-            "id": "seqAgent_0-input-tools-Tool"
-          },
-          {
-            "label": "Sequential Node",
-            "name": "sequentialNode",
-            "type": "Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
-            "description": "Can be connected to one of the following nodes: Start, Agent, Condition, LLM Node, Tool Node, Custom Function, Execute Flow",
-            "list": true,
-            "id": "seqAgent_0-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
-          },
-          {
-            "label": "Chat Model",
-            "name": "model",
-            "type": "BaseChatModel",
-            "optional": true,
-            "description": "Overwrite model to be used for this agent",
-            "id": "seqAgent_0-input-model-BaseChatModel"
-          }
-        ],
-        "inputs": {
-          "agentName": "FileSystemManager",
-          "systemMessagePrompt": "You are a file system expert who can manipulate and organize digital content. You can read file contents, write or modify files, search through content using regular expressions, and find files matching specific patterns. Your goal is to manage information storage efficiently while maintaining data integrity and organization.\n\nIMPORTANT: For content creation tasks, ONLY proceed if you have received sufficient research information. If creating substantial content like reports, articles, or documentation:\n1. Verify you have enough factual information from WebNavigator or Knowledgebase\n2. Structure the content with clear organization\n3. Include citations or references to source material when appropriate\n4. Use appropriate file formats (.md for markdown, .txt for plain text, etc.)\n\nWhen receiving a content creation instruction, assess whether adequate research has been done. If not, recommend returning to research phase first.",
-          "messageHistory": "",
-          "conversationHistorySelection": "last_message",
-          "humanMessagePrompt": "",
-          "tools": [
-            "{{customMCP_1.data.instance}}"
-          ],
-          "sequentialNode": [
-            "{{seqCondition_0.data.instance}}"
-          ],
-          "model": "",
-          "interrupt": "",
-          "promptValues": "{}",
-          "approvalPrompt": "You are about to execute tool: {tools}. Ask if user want to proceed",
-          "approveButtonText": "Yes",
-          "rejectButtonText": "No",
-          "updateStateMemory": "updateStateMemoryUI",
-          "maxIterations": ""
-        },
-        "outputAnchors": [
-          {
-            "id": "seqAgent_0-output-seqAgent-Agent",
-            "name": "seqAgent",
-            "label": "Agent",
-            "description": "Agent that can execute tools",
-            "type": "Agent"
-          }
-        ],
-        "outputs": {},
-        "selected": false
-      },
-      "width": 300,
-      "height": 860,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 2056.8432419957353,
-        "y": 77.44623768710233
-      },
-      "dragging": false
-    },
-    {
       "id": "seqStart_0",
       "position": {
         "x": 718.9582951853438,
@@ -788,7 +482,7 @@
         ],
         "inputs": {
           "llmNodeName": "Supervisor",
-          "systemMessagePrompt": "You are Supervisor, an AI agent created by BarrelOfLube.\n\nYou excel at the following tasks:\n1. Information gathering, fact-checking, documentation, ui generation.\n2. Data processing, analysis, and visualization\n3. Writing multi-chapter articles and in-depth research reports\n4. Creating websites, applications, and tools\n5. Using programming to solve various problems beyond development\n6. Various tasks that can be accomplished using computers and the internet\n\nDefault working language: English\nUse the language specified by user in messages as the working language when explicitly provided\nAll thinking and responses must be in the working language\nNatural language arguments in tool calls must be in the working language\nAvoid using pure lists and bullet points format in any language\n\nSystem capabilities:\n- Access a Linux sandbox environment with internet connection\n- Use shell, text editor, and other software\n- Write and run code in Python and various programming languages\n- Independently install required software packages and dependencies via shell\n- Access and browse the web\n- Utilize various tools to complete user-assigned tasks step by step\n\nCurrent Plan:\n{plan}\n\nYou operate in an agent loop, iteratively completing tasks through these steps:\n\n1. TASK DECOMPOSITION: Break down complex requests into logical sequential steps. For content creation tasks, ALWAYS follow this sequence:\n   a) Research and data gathering (using WebNavigator or Knowledgebase) FIRST\n   b) Analysis and synthesis of collected information\n   c) Content creation (using FileSystemManager) ONLY AFTER sufficient information is gathered\n   d) Review and refinement\n\n2. TOOL SELECTION: Choose the appropriate tool for each step:\n   - WebNavigator: For online research, browsing websites, gathering current information\n   - Knowledgebase: For accessing stored knowledge on topics\n   - CommandRunner: For executing shell commands, installing packages, running scripts\n   - FileSystemManager: For creating, reading, or modifying files AFTER research phase\n   - PlanManager: For creating or updating task plans\n   - MessageNotifyUser: For providing updates to the user\n   - MessageAskUser: For requesting additional information/clarification\n\n3. MESSAGE TOOL FORMATTING:\n   - When using MessageNotifyUser or MessageAskUser, write the COMPLETE, FINAL message text in the instruction field\n   - These tools pass your instruction text DIRECTLY to the user without any additional processing\n   - For MessageNotifyUser: Write a complete, informative update about progress or results\n   - For MessageAskUser: Write a clear, specific question with all necessary context included\n\n4. CONTEXT AWARENESS: Maintain awareness of the overall task context:\n   - For research tasks, gather comprehensive information before proceeding to content creation\n   - For multi-topic reports, research each major section thoroughly before writing\n   - Check with user after completing major task components\n\n5. EXECUTION: Execute one tool action per iteration and analyze results before proceeding\n   - Include sufficient context in each tool instruction\n   - For WebNavigator, provide detailed search instructions\n   - For FileWizard, only send after sufficient research is complete\n\n6. COMPLETION: Only enter FINISH state when all tasks are fully completed with satisfactory results",
+          "systemMessagePrompt": "You are Supervisor, an AI agent created by BarrelOfLube.\n\nYou excel at the following tasks:\n1. Information gathering, fact-checking, documentation, ui generation.\n2. Data processing, analysis, and visualization\n3. Writing multi-chapter articles and in-depth research reports\n4. Creating websites, applications, and tools\n5. Using programming to solve various problems beyond development\n6. Various tasks that can be accomplished using computers and the internet\n\nDefault working language: English\nUse the language specified by user in messages as the working language when explicitly provided\nAll thinking and responses must be in the working language\nNatural language arguments in tool calls must be in the working language\nAvoid using pure lists and bullet points format in any language\n\nSystem capabilities:\n- Access a Linux sandbox environment with internet connection\n- Use shell, text editor, and other software\n- Write and run code in Python and various programming languages\n- Independently install required software packages and dependencies via shell\n- Access and browse the web\n- Utilize various tools to complete user-assigned tasks step by step\n\nCurrent Plan:\n{plan}\n\nYou operate in an agent loop, iteratively completing tasks through these steps:\n\n1. TASK DECOMPOSITION: Break down complex requests into logical sequential steps. For content creation tasks, ALWAYS follow this sequence:\n   a) Research and data gathering (using WebNavigator or Knowledgebase) FIRST\n   b) Analysis and synthesis of collected information\n   c) Content creation (using FileSystemManager) ONLY AFTER sufficient information is gathered\n   d) Review and refinement\n\n2. TOOL SELECTION: Choose the appropriate tool for each step:\n   - WebNavigator: For online research, browsing websites, gathering current information\n   - Knowledgebase: For accessing stored knowledge on topics\n   - CommandRunner: For executing shell commands, installing packages, running scripts\n   - FileSystemManager: For creating, reading, or modifying files AFTER research phase\n   - PlanManager: For creating or updating task plans\n   - MessageNotifyUser: For providing updates to the user\n   - MessageAskUser: For requesting additional information/clarification\n\n3. MESSAGE TOOL FORMATTING:\n   - When using MessageNotifyUser or MessageAskUser, write the COMPLETE, message text in the instruction field\n   - These tools pass your instruction text DIRECTLY to the user without any additional processing\n   - For MessageNotifyUser: Write a complete, informative update about progress or results\n   - For MessageAskUser: Write a clear, specific question with all necessary context included. DO NOT over-rely on this, only ask invoke if absolutley necessary.\n\n4. CONTEXT AWARENESS: Maintain awareness of the overall task context:\n   - For research tasks, gather comprehensive information before proceeding to content creation\n   - For multi-topic reports, research each major section thoroughly before writing\n   - Check with user after completing major task components\n\n5. EXECUTION: Execute one tool action per iteration and analyze results before proceeding\n   - Include sufficient context in each tool instruction\n   - For WebNavigator, provide detailed search instructions\n   - For FileWizard, only send after sufficient research is complete\n\n6. COMPLETION: Only enter FINISH state when all tasks are fully completed with satisfactory results",
           "messageHistory": "const { AIMessage, HumanMessage, ToolMessage } = require('@langchain/core/messages');\nconst http = require('http');\n\nasync function activateNextJSRuntime() {\n  const host = 'localhost';\n  const port = 8002;\n  \n  return new Promise((resolve, reject) => {\n    let sessionId = null;\n    let toolCallSent = false;\n    \n    // Connect to SSE endpoint\n    const sseRequest = http.request({\n      hostname: host,\n      port: port,\n      path: '/sse',\n      method: 'GET',\n      headers: {'Accept': 'text/event-stream'}\n    }, (sseResponse) => {\n      if (sseResponse.statusCode !== 200) {\n        sseRequest.destroy();\n        return reject(new Error(`SSE connection failed: ${sseResponse.statusCode}`));\n      }\n      \n      let buffer = '';\n      \n      sseResponse.on('data', (chunk) => {\n        buffer += chunk.toString();\n        const lines = buffer.split('\\n');\n        buffer = lines.pop() || '';\n        \n        for (const line of lines) {\n          // Extract session ID\n          if (!sessionId && line.startsWith('data: /message?sessionId=')) {\n            const match = line.match(/sessionId=([^&\\s\\n]+)/);\n            if (match && match[1]) {\n              sessionId = match[1];\n              callNextJSRuntime(sessionId);\n            }\n          }\n          \n          // Process response\n          if (toolCallSent && line.startsWith('data: {')) {\n            try {\n              const jsonText = line.substring(6);\n              const messageData = JSON.parse(jsonText);\n              sseRequest.destroy();\n              resolve(messageData);\n            } catch (error) {\n              // Continue processing\n            }\n          }\n        }\n      });\n      \n      sseResponse.on('error', (error) => {\n        sseRequest.destroy();\n        reject(new Error(`SSE error: ${error.message}`));\n      });\n    });\n    \n    sseRequest.on('error', (error) => {\n      reject(new Error(`SSE connection failed: ${error.message}`));\n    });\n    \n    sseRequest.setTimeout(30000, () => {\n      sseRequest.destroy();\n      reject(new Error('Timeout: No response from SSE endpoint'));\n    });\n    \n    sseRequest.end();\n    \n    function callNextJSRuntime(sid) {\n      const postData = JSON.stringify({\n        jsonrpc: '2.0',\n        id: 2,\n        method: 'tools/call',\n        params: {\n          name: 'shell_attach_nextjs_runtime',\n          arguments: {useLinter: true}\n        }\n      });\n      \n      const activateRequest = http.request({\n        hostname: host,\n        port: port,\n        path: `/message?sessionId=${sid}`,\n        method: 'POST',\n        headers: {\n          'Content-Type': 'application/json',\n          'Content-Length': Buffer.byteLength(postData)\n        }\n      }, (activateResponse) => {\n        let responseData = '';\n        \n        activateResponse.on('data', (chunk) => {\n          responseData += chunk;\n        });\n        \n        activateResponse.on('end', () => {\n          if (activateResponse.statusCode === 202 || activateResponse.statusCode === 200) {\n            toolCallSent = true;\n            \n            if (activateResponse.statusCode === 200 && responseData) {\n              try {\n                const result = JSON.parse(responseData);\n                sseRequest.destroy();\n                resolve(result);\n              } catch (error) {\n                // Continue listening on SSE\n              }\n            }\n          } else {\n            sseRequest.destroy();\n            reject(new Error(`Activation failed: ${activateResponse.statusCode}`));\n          }\n        });\n      });\n      \n      activateRequest.on('error', (error) => {\n        sseRequest.destroy();\n        reject(new Error(`Activation request failed: ${error.message}`));\n      });\n      \n      activateRequest.write(postData);\n      activateRequest.end();\n    }\n  });\n}\n\nlet content = []\n\n// Add source docs\nconst sourceDocuments = $vars.input_docs || [];\nif (sourceDocuments.length > 0) {\n  const formattedDocs = sourceDocuments.map(item => {\n    const pageContent = item.pageContent;\n    const metadata = `Sources: ${JSON.stringify(item.metadata)}`;\n    return `${pageContent}\\n${metadata}`;\n  }).join('\\n\\n');\n  content = [...content, {type: \"text\", text: String(formattedDocs)}]\n}\n\n// Enable nextjs runtime\nconst enabled = $vars.is_nextjs_runtime_available === \"true\" ? true : false\nif (enabled) {\n  resp = await activateNextJSRuntime()\n  content = [...content, {type: \"text\", text: JSON.stringify(resp.result.content[0].text)}]\n}\n\nreturn [\n  new HumanMessage({\n    content: content\n  })\n]",
           "conversationHistorySelection": "all_messages",
           "humanMessagePrompt": "",
@@ -797,7 +491,7 @@
           ],
           "model": "",
           "promptValues": "{\"plan\":\"$flow.state.plan\"}",
-          "llmStructuredOutput": "[{\"key\":\"next\",\"type\":\"Enum\",\"enumValues\":\"FINISH, FileSystemManager, CommandRunner, WebNavigator, PlanManager, Knowledgebase, MessageNotifyUser, MessageAskUser\",\"description\":\"\",\"actions\":\"\",\"id\":0},{\"key\":\"instruction\",\"type\":\"String\",\"enumValues\":\"\",\"description\":\"The specific instructions of the sub-task the next role should accomplish.\",\"actions\":\"\",\"id\":1}]",
+          "llmStructuredOutput": "[{\"key\":\"next\",\"type\":\"Enum\",\"enumValues\":\"FINISH, FileSystemManager, CommandRunner, WebNavigator, PlanManager, Knowledgebase, MessageAskUser, MessageNotifyUser\",\"description\":\"\",\"actions\":\"\",\"id\":0},{\"key\":\"instruction\",\"type\":\"String\",\"enumValues\":\"\",\"description\":\"The specific instructions of the sub-task the next role should accomplish.\",\"actions\":\"\",\"id\":1}]",
           "updateStateMemory": "updateStateMemoryUI",
           "updateStateMemoryUI": "[{\"key\":\"next\",\"value\":\"$flow.output.next\",\"actions\":\"\",\"id\":0},{\"key\":\"instruction\",\"value\":\"$flow.output.instruction\",\"actions\":\"\",\"id\":1}]"
         },
@@ -1355,8 +1049,8 @@
     {
       "id": "seqAgent_2",
       "position": {
-        "x": 2059.1378545976927,
-        "y": 3437.3928501960218
+        "x": 2054.978592417112,
+        "y": 3104.651875749589
       },
       "type": "customNode",
       "data": {
@@ -1654,8 +1348,8 @@
       "height": 860,
       "selected": false,
       "positionAbsolute": {
-        "x": 2059.1378545976927,
-        "y": 3437.3928501960218
+        "x": 2054.978592417112,
+        "y": 3104.651875749589
       },
       "dragging": false
     },
@@ -1961,7 +1655,7 @@
       "id": "seqEnd_0",
       "position": {
         "x": 2057.2134615601058,
-        "y": -75.00010048390183
+        "y": -80.43137253520271
       },
       "type": "customNode",
       "data": {
@@ -1997,15 +1691,15 @@
       "selected": false,
       "positionAbsolute": {
         "x": 2057.2134615601058,
-        "y": -75.00010048390183
+        "y": -80.43137253520271
       },
       "dragging": false
     },
     {
       "id": "seqLLMNode_1",
       "position": {
-        "x": 2058.365836914292,
-        "y": 2999.781945228808
+        "x": 2054.206574733711,
+        "y": 2667.0409707823756
       },
       "type": "customNode",
       "data": {
@@ -2274,8 +1968,8 @@
       "height": 433,
       "selected": false,
       "positionAbsolute": {
-        "x": 2058.365836914292,
-        "y": 2999.781945228808
+        "x": 2054.206574733711,
+        "y": 2667.0409707823756
       },
       "dragging": false
     },
@@ -3003,8 +2697,8 @@
     {
       "id": "seqConditionAgent_0",
       "position": {
-        "x": 2695.39337547825,
-        "y": 950.0135551142116
+        "x": 2691.2341132976694,
+        "y": 617.272580667779
       },
       "type": "customNode",
       "data": {
@@ -3309,16 +3003,16 @@
       "height": 629,
       "selected": false,
       "positionAbsolute": {
-        "x": 2695.39337547825,
-        "y": 950.0135551142116
+        "x": 2691.2341132976694,
+        "y": 617.272580667779
       },
       "dragging": false
     },
     {
       "id": "seqLLMNode_2",
       "position": {
-        "x": 3012.5703714645906,
-        "y": 949.6502705903555
+        "x": 3008.41110928401,
+        "y": 616.9092961439229
       },
       "type": "customNode",
       "data": {
@@ -3586,16 +3280,16 @@
       "height": 433,
       "selected": false,
       "positionAbsolute": {
-        "x": 3012.5703714645906,
-        "y": 949.6502705903555
+        "x": 3008.41110928401,
+        "y": 616.9092961439229
       },
       "dragging": false
     },
     {
       "id": "seqLLMNode_3",
       "position": {
-        "x": 3013.8182138147095,
-        "y": 1388.5547068135477
+        "x": 3009.6589516341287,
+        "y": 1055.813732367115
       },
       "type": "customNode",
       "data": {
@@ -3863,16 +3557,16 @@
       "height": 433,
       "selected": false,
       "positionAbsolute": {
-        "x": 3013.8182138147095,
-        "y": 1388.5547068135477
+        "x": 3009.6589516341287,
+        "y": 1055.813732367115
       },
       "dragging": false
     },
     {
       "id": "seqLoop_1",
       "position": {
-        "x": 3333.45721213525,
-        "y": 1581.0118107432104
+        "x": 3329.297949954669,
+        "y": 1248.2708362967778
       },
       "type": "customNode",
       "data": {
@@ -3920,8 +3614,8 @@
       "height": 242,
       "selected": false,
       "positionAbsolute": {
-        "x": 3333.45721213525,
-        "y": 1581.0118107432104
+        "x": 3329.297949954669,
+        "y": 1248.2708362967778
       },
       "dragging": false
     },
@@ -4121,7 +3815,7 @@
         ],
         "inputs": {
           "cache": "",
-          "modelName": "claude-3-5-haiku-latest",
+          "modelName": "claude-3-7-sonnet-latest",
           "temperature": "0.2",
           "streaming": true,
           "maxTokensToSample": "",
@@ -4155,8 +3849,8 @@
     {
       "id": "seqToolNode_0",
       "position": {
-        "x": 2377.037913920818,
-        "y": 951.2830043175034
+        "x": 2372.8786517402373,
+        "y": 618.5420298710708
       },
       "type": "customNode",
       "data": {
@@ -4356,16 +4050,16 @@
       "height": 529,
       "selected": false,
       "positionAbsolute": {
-        "x": 2377.037913920818,
-        "y": 951.2830043175034
+        "x": 2372.8786517402373,
+        "y": 618.5420298710708
       },
       "dragging": false
     },
     {
       "id": "seqLLMNode_4",
       "position": {
-        "x": 2055.7360517428433,
-        "y": 952.6633465296773
+        "x": 2051.5767895622625,
+        "y": 619.9223720832447
       },
       "type": "customNode",
       "data": {
@@ -4633,16 +4327,16 @@
       "height": 433,
       "selected": false,
       "positionAbsolute": {
-        "x": 2055.7360517428433,
-        "y": 952.6633465296773
+        "x": 2051.5767895622625,
+        "y": 619.9223720832447
       },
       "dragging": false
     },
     {
       "id": "seqLoop_2",
       "position": {
-        "x": 2378.8216854961815,
-        "y": 696.6593454622882
+        "x": 3008.9532982262017,
+        "y": -504.67402508535315
       },
       "type": "customNode",
       "data": {
@@ -4678,7 +4372,7 @@
         ],
         "inputs": {
           "sequentialNode": [
-            "{{seqAgent_0.data.instance}}"
+            "{{seqCondition_1.data.instance}}"
           ],
           "loopToName": "Supervisor"
         },
@@ -4690,16 +4384,16 @@
       "height": 242,
       "selected": false,
       "positionAbsolute": {
-        "x": 2378.8216854961815,
-        "y": 696.6593454622882
+        "x": 3008.9532982262017,
+        "y": -504.67402508535315
       },
       "dragging": false
     },
     {
       "id": "seqLoop_3",
       "position": {
-        "x": 2374.1493126711016,
-        "y": 3193.0454847838987
+        "x": 2369.990050490521,
+        "y": 2860.304510337466
       },
       "type": "customNode",
       "data": {
@@ -4747,16 +4441,16 @@
       "height": 242,
       "selected": false,
       "positionAbsolute": {
-        "x": 2374.1493126711016,
-        "y": 3193.0454847838987
+        "x": 2369.990050490521,
+        "y": 2860.304510337466
       },
       "dragging": false
     },
     {
       "id": "seqLoop_4",
       "position": {
-        "x": 2373.7895631033407,
-        "y": 4060.2088775670813
+        "x": 2369.63030092276,
+        "y": 3727.4679031206488
       },
       "type": "customNode",
       "data": {
@@ -4804,16 +4498,16 @@
       "height": 242,
       "selected": false,
       "positionAbsolute": {
-        "x": 2373.7895631033407,
-        "y": 4060.2088775670813
+        "x": 2369.63030092276,
+        "y": 3727.4679031206488
       },
       "dragging": false
     },
     {
       "id": "seqLoop_5",
       "position": {
-        "x": 3334.2343158672393,
-        "y": 947.1395513159023
+        "x": 3330.0750536866585,
+        "y": 614.3985768694697
       },
       "type": "customNode",
       "data": {
@@ -4861,16 +4555,16 @@
       "height": 242,
       "selected": false,
       "positionAbsolute": {
-        "x": 3334.2343158672393,
-        "y": 947.1395513159023
+        "x": 3330.0750536866585,
+        "y": 614.3985768694697
       },
       "dragging": false
     },
     {
       "id": "seqCustomFunction_0",
       "position": {
-        "x": 2057.82369899717,
-        "y": 2198.3180923883992
+        "x": 2053.6644368165894,
+        "y": 1865.5771179419667
       },
       "type": "customNode",
       "data": {
@@ -4970,16 +4664,16 @@
       "height": 795,
       "selected": false,
       "positionAbsolute": {
-        "x": 2057.82369899717,
-        "y": 2198.3180923883992
+        "x": 2053.6644368165894,
+        "y": 1865.5771179419667
       },
       "dragging": false
     },
     {
       "id": "seqLoop_6",
       "position": {
-        "x": 2371.974825600182,
-        "y": 2754.3261721807617
+        "x": 2367.8155634196014,
+        "y": 2421.585197734329
       },
       "type": "customNode",
       "data": {
@@ -5027,16 +4721,16 @@
       "height": 242,
       "selected": false,
       "positionAbsolute": {
-        "x": 2371.974825600182,
-        "y": 2754.3261721807617
+        "x": 2367.8155634196014,
+        "y": 2421.585197734329
       },
       "dragging": false
     },
     {
       "id": "seqEnd_1",
       "position": {
-        "x": 2373.1990743114743,
-        "y": 2045.8827030042478
+        "x": 2369.0398121308936,
+        "y": 1713.1417285578152
       },
       "type": "customNode",
       "data": {
@@ -5071,16 +4765,16 @@
       "height": 143,
       "selected": false,
       "positionAbsolute": {
-        "x": 2373.1990743114743,
-        "y": 2045.8827030042478
+        "x": 2369.0398121308936,
+        "y": 1713.1417285578152
       },
       "dragging": false
     },
     {
       "id": "seqCustomFunction_1",
       "position": {
-        "x": 2055.738463485846,
-        "y": 1395.0996172862872
+        "x": 2051.579201305265,
+        "y": 1062.3586428398546
       },
       "type": "customNode",
       "data": {
@@ -5180,8 +4874,8 @@
       "height": 795,
       "selected": false,
       "positionAbsolute": {
-        "x": 2055.738463485846,
-        "y": 1395.0996172862872
+        "x": 2051.579201305265,
+        "y": 1062.3586428398546
       },
       "dragging": false
     },
@@ -5245,8 +4939,8 @@
     {
       "id": "plainText_0",
       "position": {
-        "x": 379.0076783372229,
-        "y": 1985.1334533504598
+        "x": 376.2635886620957,
+        "y": 1983.761408512896
       },
       "type": "customNode",
       "data": {
@@ -5300,7 +4994,7 @@
           }
         ],
         "inputs": {
-          "text": "true",
+          "text": "false",
           "textSplitter": "",
           "metadata": "",
           "omitMetadataKeys": ""
@@ -5338,8 +5032,8 @@
       "width": 300,
       "height": 487,
       "positionAbsolute": {
-        "x": 379.0076783372229,
-        "y": 1985.1334533504598
+        "x": 376.2635886620957,
+        "y": 1983.761408512896
       },
       "selected": false,
       "dragging": false
@@ -5546,6 +5240,1282 @@
         "x": 1030.2376937088827,
         "y": -132.8837439477482
       }
+    },
+    {
+      "id": "seqLLMNode_5",
+      "position": {
+        "x": 2057.696721767833,
+        "y": 71.29030790710411
+      },
+      "type": "customNode",
+      "data": {
+        "id": "seqLLMNode_5",
+        "label": "LLM Node",
+        "version": 4.1,
+        "name": "seqLLMNode",
+        "type": "LLMNode",
+        "baseClasses": [
+          "LLMNode"
+        ],
+        "category": "Sequential Agents",
+        "description": "Run Chat Model and return the output",
+        "inputParams": [
+          {
+            "label": "Name",
+            "name": "llmNodeName",
+            "type": "string",
+            "placeholder": "LLM",
+            "id": "seqLLMNode_5-input-llmNodeName-string"
+          },
+          {
+            "label": "System Prompt",
+            "name": "systemMessagePrompt",
+            "type": "string",
+            "rows": 4,
+            "optional": true,
+            "additionalParams": true,
+            "id": "seqLLMNode_5-input-systemMessagePrompt-string"
+          },
+          {
+            "label": "Prepend Messages History",
+            "name": "messageHistory",
+            "description": "Prepend a list of messages between System Prompt and Human Prompt. This is useful when you want to provide few shot examples",
+            "type": "code",
+            "hideCodeExecute": true,
+            "codeExample": "const { AIMessage, HumanMessage, ToolMessage } = require('@langchain/core/messages');\n\nreturn [\n    new HumanMessage(\"What is 333382 🦜 1932?\"),\n    new AIMessage({\n        content: \"\",\n        tool_calls: [\n        {\n            id: \"12345\",\n            name: \"calulator\",\n            args: {\n                number1: 333382,\n                number2: 1932,\n                operation: \"divide\",\n            },\n        },\n        ],\n    }),\n    new ToolMessage({\n        tool_call_id: \"12345\",\n        content: \"The answer is 172.558.\",\n    }),\n    new AIMessage(\"The answer is 172.558.\"),\n]",
+            "optional": true,
+            "additionalParams": true,
+            "id": "seqLLMNode_5-input-messageHistory-code"
+          },
+          {
+            "label": "Conversation History",
+            "name": "conversationHistorySelection",
+            "type": "options",
+            "options": [
+              {
+                "label": "User Question",
+                "name": "user_question",
+                "description": "Use the user question from the historical conversation messages as input."
+              },
+              {
+                "label": "Last Conversation Message",
+                "name": "last_message",
+                "description": "Use the last conversation message from the historical conversation messages as input."
+              },
+              {
+                "label": "All Conversation Messages",
+                "name": "all_messages",
+                "description": "Use all conversation messages from the historical conversation messages as input."
+              },
+              {
+                "label": "Empty",
+                "name": "empty",
+                "description": "Do not use any messages from the conversation history. Ensure to use either System Prompt, Human Prompt, or Messages History."
+              }
+            ],
+            "default": "all_messages",
+            "optional": true,
+            "description": "Select which messages from the conversation history to include in the prompt. The selected messages will be inserted between the System Prompt (if defined) and [Messages History, Human Prompt].",
+            "additionalParams": true,
+            "id": "seqLLMNode_5-input-conversationHistorySelection-options"
+          },
+          {
+            "label": "Human Prompt",
+            "name": "humanMessagePrompt",
+            "type": "string",
+            "description": "This prompt will be added at the end of the messages as human message",
+            "rows": 4,
+            "optional": true,
+            "additionalParams": true,
+            "id": "seqLLMNode_5-input-humanMessagePrompt-string"
+          },
+          {
+            "label": "Format Prompt Values",
+            "name": "promptValues",
+            "description": "Assign values to the prompt variables. You can also use $flow.state.<variable-name> to get the state value",
+            "type": "json",
+            "optional": true,
+            "acceptVariable": true,
+            "list": true,
+            "additionalParams": true,
+            "id": "seqLLMNode_5-input-promptValues-json"
+          },
+          {
+            "label": "JSON Structured Output",
+            "name": "llmStructuredOutput",
+            "type": "datagrid",
+            "description": "Instruct the LLM to give output in a JSON structured schema",
+            "datagrid": [
+              {
+                "field": "key",
+                "headerName": "Key",
+                "editable": true
+              },
+              {
+                "field": "type",
+                "headerName": "Type",
+                "type": "singleSelect",
+                "valueOptions": [
+                  "String",
+                  "String Array",
+                  "Number",
+                  "Boolean",
+                  "Enum"
+                ],
+                "editable": true
+              },
+              {
+                "field": "enumValues",
+                "headerName": "Enum Values",
+                "editable": true
+              },
+              {
+                "field": "description",
+                "headerName": "Description",
+                "flex": 1,
+                "editable": true
+              }
+            ],
+            "optional": true,
+            "additionalParams": true,
+            "id": "seqLLMNode_5-input-llmStructuredOutput-datagrid"
+          },
+          {
+            "label": "Update State",
+            "name": "updateStateMemory",
+            "type": "tabs",
+            "tabIdentifier": "selectedUpdateStateMemoryTab",
+            "default": "updateStateMemoryUI",
+            "additionalParams": true,
+            "tabs": [
+              {
+                "label": "Update State (Table)",
+                "name": "updateStateMemoryUI",
+                "type": "datagrid",
+                "hint": {
+                  "label": "How to use",
+                  "value": "\n1. Key and value pair to be updated. For example: if you have the following State:\n    | Key       | Operation     | Default Value     |\n    |-----------|---------------|-------------------|\n    | user      | Replace       |                   |\n\n    You can update the \"user\" value with the following:\n    | Key       | Value     |\n    |-----------|-----------|\n    | user      | john doe  |\n\n2. If you want to use the LLM Node's output as the value to update state, it is available as available as `$flow.output` with the following structure:\n    ```json\n    {\n        \"content\": 'Hello! How can I assist you today?',\n        \"name\": \"\",\n        \"additional_kwargs\": {},\n        \"response_metadata\": {},\n        \"tool_calls\": [],\n        \"invalid_tool_calls\": [],\n        \"usage_metadata\": {}\n    }\n    ```\n\n    For example, if the output `content` is the value you want to update the state with, you can do the following:\n    | Key       | Value                     |\n    |-----------|---------------------------|\n    | user      | `$flow.output.content`  |\n\n3. You can get default flow config, including the current \"state\":\n    - `$flow.sessionId`\n    - `$flow.chatId`\n    - `$flow.chatflowId`\n    - `$flow.input`\n    - `$flow.state`\n\n4. You can get custom variables: `$vars.<variable-name>`\n\n"
+                },
+                "description": "This is only applicable when you have a custom State at the START node. After agent execution, you might want to update the State values",
+                "datagrid": [
+                  {
+                    "field": "key",
+                    "headerName": "Key",
+                    "type": "asyncSingleSelect",
+                    "loadMethod": "loadStateKeys",
+                    "flex": 0.5,
+                    "editable": true
+                  },
+                  {
+                    "field": "value",
+                    "headerName": "Value",
+                    "type": "freeSolo",
+                    "valueOptions": [
+                      {
+                        "label": "LLM Node Output (string)",
+                        "value": "$flow.output.content"
+                      },
+                      {
+                        "label": "LLM JSON Output Key (string)",
+                        "value": "$flow.output.<replace-with-key>"
+                      },
+                      {
+                        "label": "Global variable (string)",
+                        "value": "$vars.<variable-name>"
+                      },
+                      {
+                        "label": "Input Question (string)",
+                        "value": "$flow.input"
+                      },
+                      {
+                        "label": "Session Id (string)",
+                        "value": "$flow.sessionId"
+                      },
+                      {
+                        "label": "Chat Id (string)",
+                        "value": "$flow.chatId"
+                      },
+                      {
+                        "label": "Chatflow Id (string)",
+                        "value": "$flow.chatflowId"
+                      }
+                    ],
+                    "editable": true,
+                    "flex": 1
+                  }
+                ],
+                "optional": true,
+                "additionalParams": true
+              },
+              {
+                "label": "Update State (Code)",
+                "name": "updateStateMemoryCode",
+                "type": "code",
+                "hint": {
+                  "label": "How to use",
+                  "value": "\n1. Return the key value JSON object. For example: if you have the following State:\n    ```json\n    {\n        \"user\": null\n    }\n    ```\n\n    You can update the \"user\" value by returning the following:\n    ```js\n    return {\n        \"user\": \"john doe\"\n    }\n    ```\n\n2. If you want to use the LLM Node's output as the value to update state, it is available as `$flow.output` with the following structure:\n    ```json\n    {\n        \"content\": 'Hello! How can I assist you today?',\n        \"name\": \"\",\n        \"additional_kwargs\": {},\n        \"response_metadata\": {},\n        \"tool_calls\": [],\n        \"invalid_tool_calls\": [],\n        \"usage_metadata\": {}\n    }\n    ```\n\n    For example, if the output `content` is the value you want to update the state with, you can return the following:\n    ```js\n    return {\n        \"user\": $flow.output.content\n    }\n    ```\n\n3. You can also get default flow config, including the current \"state\":\n    - `$flow.sessionId`\n    - `$flow.chatId`\n    - `$flow.chatflowId`\n    - `$flow.input`\n    - `$flow.state`\n\n4. You can get custom variables: `$vars.<variable-name>`\n\n"
+                },
+                "description": "This is only applicable when you have a custom State at the START node. After agent execution, you might want to update the State values. Must return an object representing the state",
+                "hideCodeExecute": true,
+                "codeExample": "const result = $flow.output;\n\n/* Suppose we have a custom State schema like this:\n* {\n    aggregate: {\n        value: (x, y) => x.concat(y),\n        default: () => []\n    }\n  }\n*/\n\nreturn {\n  aggregate: [result.content]\n};",
+                "optional": true,
+                "additionalParams": true
+              }
+            ],
+            "id": "seqLLMNode_5-input-updateStateMemory-tabs"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Sequential Node",
+            "name": "sequentialNode",
+            "type": "Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+            "description": "Can be connected to one of the following nodes: Start, Agent, Condition, LLM, Tool Node, Custom Function, Execute Flow",
+            "list": true,
+            "id": "seqLLMNode_5-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+          },
+          {
+            "label": "Chat Model",
+            "name": "model",
+            "type": "BaseChatModel",
+            "optional": true,
+            "description": "Overwrite model to be used for this node",
+            "id": "seqLLMNode_5-input-model-BaseChatModel"
+          }
+        ],
+        "inputs": {
+          "llmNodeName": "FileSystemManager",
+          "systemMessagePrompt": "You are a file system expert who can manipulate and organize digital content. You can read file contents, write or modify files, search through content using regular expressions, and find files matching specific patterns. Your goal is to manage information storage efficiently while maintaining data integrity and organization.\n\nIMPORTANT: Always pass empty string as content for file_write if the instructions of the message instructs to create a file and/or specify its contents.\nDEFAULT_FS_OPS_DIR=/mnt/data",
+          "messageHistory": "",
+          "conversationHistorySelection": "last_message",
+          "humanMessagePrompt": "",
+          "sequentialNode": [
+            "{{seqCondition_0.data.instance}}"
+          ],
+          "model": "",
+          "promptValues": "",
+          "llmStructuredOutput": "",
+          "updateStateMemory": "updateStateMemoryUI"
+        },
+        "outputAnchors": [
+          {
+            "id": "seqLLMNode_5-output-seqLLMNode-LLMNode",
+            "name": "seqLLMNode",
+            "label": "LLMNode",
+            "description": "Run Chat Model and return the output",
+            "type": "LLMNode"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 433,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2057.696721767833,
+        "y": 71.29030790710411
+      },
+      "dragging": false
+    },
+    {
+      "id": "seqToolNode_1",
+      "position": {
+        "x": 2373.044490358755,
+        "y": 69.61782448259922
+      },
+      "type": "customNode",
+      "data": {
+        "id": "seqToolNode_1",
+        "label": "Tool Node",
+        "version": 2.1,
+        "name": "seqToolNode",
+        "type": "ToolNode",
+        "baseClasses": [
+          "ToolNode"
+        ],
+        "category": "Sequential Agents",
+        "description": "Execute tool and return tool's output",
+        "inputParams": [
+          {
+            "label": "Name",
+            "name": "toolNodeName",
+            "type": "string",
+            "placeholder": "Tool",
+            "id": "seqToolNode_1-input-toolNodeName-string"
+          },
+          {
+            "label": "Require Approval",
+            "name": "interrupt",
+            "description": "Require approval before executing tools",
+            "type": "boolean",
+            "optional": true,
+            "id": "seqToolNode_1-input-interrupt-boolean"
+          },
+          {
+            "label": "Approval Prompt",
+            "name": "approvalPrompt",
+            "description": "Prompt for approval. Only applicable if \"Require Approval\" is enabled",
+            "type": "string",
+            "default": "You are about to execute tool: {tools}. Ask if user want to proceed",
+            "rows": 4,
+            "optional": true,
+            "additionalParams": true,
+            "id": "seqToolNode_1-input-approvalPrompt-string"
+          },
+          {
+            "label": "Approve Button Text",
+            "name": "approveButtonText",
+            "description": "Text for approve button. Only applicable if \"Require Approval\" is enabled",
+            "type": "string",
+            "default": "Yes",
+            "optional": true,
+            "additionalParams": true,
+            "id": "seqToolNode_1-input-approveButtonText-string"
+          },
+          {
+            "label": "Reject Button Text",
+            "name": "rejectButtonText",
+            "description": "Text for reject button. Only applicable if \"Require Approval\" is enabled",
+            "type": "string",
+            "default": "No",
+            "optional": true,
+            "additionalParams": true,
+            "id": "seqToolNode_1-input-rejectButtonText-string"
+          },
+          {
+            "label": "Update State",
+            "name": "updateStateMemory",
+            "type": "tabs",
+            "tabIdentifier": "selectedUpdateStateMemoryTab",
+            "additionalParams": true,
+            "default": "updateStateMemoryUI",
+            "tabs": [
+              {
+                "label": "Update State (Table)",
+                "name": "updateStateMemoryUI",
+                "type": "datagrid",
+                "hint": {
+                  "label": "How to use",
+                  "value": "\n1. Key and value pair to be updated. For example: if you have the following State:\n    | Key       | Operation     | Default Value     |\n    |-----------|---------------|-------------------|\n    | user      | Replace       |                   |\n\n    You can update the \"user\" value with the following:\n    | Key       | Value     |\n    |-----------|-----------|\n    | user      | john doe  |\n\n2. If you want to use the Tool Node's output as the value to update state, it is available as available as `$flow.output` with the following structure (array):\n    ```json\n    [\n        {\n            \"tool\": \"tool's name\",\n            \"toolInput\": {},\n            \"toolOutput\": \"tool's output content\",\n            \"sourceDocuments\": [\n                {\n                    \"pageContent\": \"This is the page content\",\n                    \"metadata\": \"{foo: var}\"\n                }\n            ]\n        }\n    ]\n    ```\n\n    For example:\n    | Key          | Value                                     |\n    |--------------|-------------------------------------------|\n    | sources      | `$flow.output[0].toolOutput`       |\n\n3. You can get default flow config, including the current \"state\":\n    - `$flow.sessionId`\n    - `$flow.chatId`\n    - `$flow.chatflowId`\n    - `$flow.input`\n    - `$flow.state`\n\n4. You can get custom variables: `$vars.<variable-name>`\n\n"
+                },
+                "description": "This is only applicable when you have a custom State at the START node. After tool execution, you might want to update the State values",
+                "datagrid": [
+                  {
+                    "field": "key",
+                    "headerName": "Key",
+                    "type": "asyncSingleSelect",
+                    "loadMethod": "loadStateKeys",
+                    "flex": 0.5,
+                    "editable": true
+                  },
+                  {
+                    "field": "value",
+                    "headerName": "Value",
+                    "type": "freeSolo",
+                    "valueOptions": [
+                      {
+                        "label": "All Tools Output (array)",
+                        "value": "$flow.output"
+                      },
+                      {
+                        "label": "First Tool Output (string)",
+                        "value": "$flow.output[0].toolOutput"
+                      },
+                      {
+                        "label": "First Tool Input Arguments (string | json)",
+                        "value": "$flow.output[0].toolInput"
+                      },
+                      {
+                        "label": "First Tool Returned Source Documents (array)",
+                        "value": "$flow.output[0].sourceDocuments"
+                      },
+                      {
+                        "label": "Global variable (string)",
+                        "value": "$vars.<variable-name>"
+                      },
+                      {
+                        "label": "Input Question (string)",
+                        "value": "$flow.input"
+                      },
+                      {
+                        "label": "Session Id (string)",
+                        "value": "$flow.sessionId"
+                      },
+                      {
+                        "label": "Chat Id (string)",
+                        "value": "$flow.chatId"
+                      },
+                      {
+                        "label": "Chatflow Id (string)",
+                        "value": "$flow.chatflowId"
+                      }
+                    ],
+                    "editable": true,
+                    "flex": 1
+                  }
+                ],
+                "optional": true,
+                "additionalParams": true
+              },
+              {
+                "label": "Update State (Code)",
+                "name": "updateStateMemoryCode",
+                "type": "code",
+                "hint": {
+                  "label": "How to use",
+                  "value": "\n1. Return the key value JSON object. For example: if you have the following State:\n    ```json\n    {\n        \"user\": null\n    }\n    ```\n\n    You can update the \"user\" value by returning the following:\n    ```js\n    return {\n        \"user\": \"john doe\"\n    }\n    ```\n\n2. If you want to use the tool's output as the value to update state, it is available as `$flow.output` with the following structure (array):\n    ```json\n    [\n        {\n            \"tool\": \"tool's name\",\n            \"toolInput\": {},\n            \"toolOutput\": \"tool's output content\",\n            \"sourceDocuments\": [\n                {\n                    \"pageContent\": \"This is the page content\",\n                    \"metadata\": \"{foo: var}\"\n                }\n            ]\n        }\n    ]\n    ```\n\n    For example:\n    ```js\n    /* Assuming you have the following state:\n    {\n        \"sources\": null\n    }\n    */\n    \n    return {\n        \"sources\": $flow.output[0].toolOutput\n    }\n    ```\n\n3. You can also get default flow config, including the current \"state\":\n    - `$flow.sessionId`\n    - `$flow.chatId`\n    - `$flow.chatflowId`\n    - `$flow.input`\n    - `$flow.state`\n\n4. You can get custom variables: `$vars.<variable-name>`\n\n"
+                },
+                "description": "This is only applicable when you have a custom State at the START node. After tool execution, you might want to update the State values. Must return an object representing the state",
+                "hideCodeExecute": true,
+                "codeExample": "const result = $flow.output;\n\n/* Suppose we have a custom State schema like this:\n* {\n    aggregate: {\n        value: (x, y) => x.concat(y),\n        default: () => []\n    }\n  }\n*/\n\nreturn {\n  aggregate: [result.content]\n};",
+                "optional": true,
+                "additionalParams": true
+              }
+            ],
+            "id": "seqToolNode_1-input-updateStateMemory-tabs"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Tools",
+            "name": "tools",
+            "type": "Tool",
+            "list": true,
+            "optional": true,
+            "id": "seqToolNode_1-input-tools-Tool"
+          },
+          {
+            "label": "LLM Node",
+            "name": "llmNode",
+            "type": "LLMNode",
+            "id": "seqToolNode_1-input-llmNode-LLMNode"
+          }
+        ],
+        "inputs": {
+          "tools": [
+            "{{customMCP_1.data.instance}}"
+          ],
+          "llmNode": "{{seqLLMNode_5.data.instance}}",
+          "toolNodeName": "fs",
+          "interrupt": "",
+          "approvalPrompt": "You are about to execute tool: {tools}. Ask if user want to proceed",
+          "approveButtonText": "Yes",
+          "rejectButtonText": "No",
+          "updateStateMemory": "updateStateMemoryUI"
+        },
+        "outputAnchors": [
+          {
+            "id": "seqToolNode_1-output-seqToolNode-ToolNode",
+            "name": "seqToolNode",
+            "label": "ToolNode",
+            "description": "Execute tool and return tool's output",
+            "type": "ToolNode"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 529,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2373.044490358755,
+        "y": 69.61782448259922
+      },
+      "dragging": false
+    },
+    {
+      "id": "seqCondition_1",
+      "position": {
+        "x": 2683.892017306258,
+        "y": 28.52519991198689
+      },
+      "type": "customNode",
+      "data": {
+        "id": "seqCondition_1",
+        "label": "Condition",
+        "version": 2.1,
+        "name": "seqCondition",
+        "type": "Condition",
+        "baseClasses": [
+          "Condition"
+        ],
+        "category": "Sequential Agents",
+        "description": "Conditional function to determine which route to take next",
+        "inputParams": [
+          {
+            "label": "Condition Name",
+            "name": "conditionName",
+            "type": "string",
+            "optional": true,
+            "placeholder": "If X, then Y",
+            "id": "seqCondition_1-input-conditionName-string"
+          },
+          {
+            "label": "Condition",
+            "name": "condition",
+            "type": "conditionFunction",
+            "tabIdentifier": "selectedConditionFunctionTab",
+            "tabs": [
+              {
+                "label": "Condition (Table)",
+                "name": "conditionUI",
+                "type": "datagrid",
+                "description": "If a condition is met, the node connected to the respective output will be executed",
+                "optional": true,
+                "datagrid": [
+                  {
+                    "field": "variable",
+                    "headerName": "Variable",
+                    "type": "freeSolo",
+                    "editable": true,
+                    "loadMethod": [
+                      "getPreviousMessages",
+                      "loadStateKeys"
+                    ],
+                    "valueOptions": [
+                      {
+                        "label": "Total Messages (number)",
+                        "value": "$flow.state.messages.length"
+                      },
+                      {
+                        "label": "First Message Content (string)",
+                        "value": "$flow.state.messages[0].content"
+                      },
+                      {
+                        "label": "Last Message Content (string)",
+                        "value": "$flow.state.messages[-1].content"
+                      },
+                      {
+                        "label": "Global variable (string)",
+                        "value": "$vars.<variable-name>"
+                      }
+                    ],
+                    "flex": 0.5,
+                    "minWidth": 200
+                  },
+                  {
+                    "field": "operation",
+                    "headerName": "Operation",
+                    "type": "singleSelect",
+                    "valueOptions": [
+                      "Contains",
+                      "Not Contains",
+                      "Start With",
+                      "End With",
+                      "Is",
+                      "Is Not",
+                      "Is Empty",
+                      "Is Not Empty",
+                      "Greater Than",
+                      "Less Than",
+                      "Equal To",
+                      "Not Equal To",
+                      "Greater Than or Equal To",
+                      "Less Than or Equal To"
+                    ],
+                    "editable": true,
+                    "flex": 0.4,
+                    "minWidth": 150
+                  },
+                  {
+                    "field": "value",
+                    "headerName": "Value",
+                    "flex": 1,
+                    "editable": true
+                  },
+                  {
+                    "field": "output",
+                    "headerName": "Output Name",
+                    "editable": true,
+                    "flex": 0.3,
+                    "minWidth": 150
+                  }
+                ]
+              },
+              {
+                "label": "Condition (Code)",
+                "name": "conditionFunction",
+                "type": "code",
+                "description": "Function to evaluate the condition",
+                "hint": {
+                  "label": "How to use",
+                  "value": "\n1. Must return a string value at the end of function. For example:\n    ```js\n    if (\"X\" === \"X\") {\n        return \"Agent\"; // connect to next agent node\n    } else {\n        return \"End\"; // connect to end node\n    }\n    ```\n\n2. In most cases, you would probably get the last message to do some comparison. You can get all current messages from the state: `$flow.state.messages`:\n    ```json\n    [\n        {\n            \"content\": \"Hello! How can I assist you today?\",\n            \"name\": \"\",\n            \"additional_kwargs\": {},\n            \"response_metadata\": {},\n            \"tool_calls\": [],\n            \"invalid_tool_calls\": [],\n            \"usage_metadata\": {}\n        }\n    ]\n    ```\n\n    For example, to get the last message content:\n    ```js\n    const messages = $flow.state.messages;\n    const lastMessage = messages[messages.length - 1];\n\n    // Proceed to do something with the last message content\n    ```\n\n3. You can get default flow config, including the current \"state\":\n    - `$flow.sessionId`\n    - `$flow.chatId`\n    - `$flow.chatflowId`\n    - `$flow.input`\n    - `$flow.state`\n\n4. You can get custom variables: `$vars.<variable-name>`\n\n"
+                },
+                "hideCodeExecute": true,
+                "codeExample": "const state = $flow.state;\n                \nconst messages = state.messages;\n\nconst lastMessage = messages[messages.length - 1];\n\n/* Check if the last message has content */\nif (lastMessage.content) {\n    return \"Agent\";\n}\n\nreturn \"End\";",
+                "optional": true
+              }
+            ],
+            "id": "seqCondition_1-input-condition-conditionFunction"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Sequential Node",
+            "name": "sequentialNode",
+            "type": "Start | Agent | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+            "description": "Can be connected to one of the following nodes: Start, Agent, LLM Node, Tool Node, Custom Function, Execute Flow",
+            "list": true,
+            "id": "seqCondition_1-input-sequentialNode-Start | Agent | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+          }
+        ],
+        "inputs": {
+          "conditionName": "return direct",
+          "sequentialNode": [
+            "{{seqToolNode_1.data.instance}}"
+          ],
+          "condition": "",
+          "conditionFunction": "const state = $flow.state;\n                \nconst messages = state.messages;\nconst lastMessage = messages[messages.length - 1];\n/* Check if the last message has content */\nif (lastMessage.tool && [\"file_read\", \"file_read_image\"].includes(lastMessage.tool)) {\n    return \"true\";\n} else if (lastMessage.tool === \"file_write\" && lastMessage.toolOutput === \"\") {\n    return \"write_file_content\";\n} else if (lastMessage.tool && [].includes(lastMessage.tool)) {\n    return \"FileSystemManager\"\n}\nreturn \"false\";",
+          "selectedConditionFunctionTab_seqCondition_1": "conditionFunction"
+        },
+        "outputAnchors": [
+          {
+            "name": "output",
+            "label": "Output",
+            "type": "options",
+            "options": [
+              {
+                "id": "seqCondition_1-output-filesystemmanager-Condition",
+                "name": "filesystemmanager",
+                "label": "FileSystemManager",
+                "type": "Condition",
+                "isAnchor": true
+              },
+              {
+                "id": "seqCondition_1-output-false-Condition",
+                "name": "false",
+                "label": "false",
+                "type": "Condition",
+                "isAnchor": true
+              },
+              {
+                "id": "seqCondition_1-output-true-Condition",
+                "name": "true",
+                "label": "true",
+                "type": "Condition",
+                "isAnchor": true
+              },
+              {
+                "id": "seqCondition_1-output-write_file_content-Condition",
+                "name": "write_file_content",
+                "label": "write_file_content",
+                "type": "Condition",
+                "isAnchor": true
+              }
+            ]
+          }
+        ],
+        "outputs": {
+          "output": "next"
+        },
+        "selected": false
+      },
+      "width": 300,
+      "height": 577,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2683.892017306258,
+        "y": 28.52519991198689
+      },
+      "dragging": false
+    },
+    {
+      "id": "seqLoop_7",
+      "position": {
+        "x": 3638.153212587294,
+        "y": -503.18022819201246
+      },
+      "type": "customNode",
+      "data": {
+        "id": "seqLoop_7",
+        "label": "Loop",
+        "version": 2.1,
+        "name": "seqLoop",
+        "type": "Loop",
+        "baseClasses": [
+          "Loop"
+        ],
+        "category": "Sequential Agents",
+        "description": "Loop back to the specific sequential node",
+        "inputParams": [
+          {
+            "label": "Loop To",
+            "name": "loopToName",
+            "description": "Name of the agent/llm to loop back to",
+            "type": "string",
+            "placeholder": "Agent",
+            "id": "seqLoop_7-input-loopToName-string"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Sequential Node",
+            "name": "sequentialNode",
+            "type": "Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+            "description": "Can be connected to one of the following nodes: Agent, Condition, LLM Node, Tool Node, Custom Function, Execute Flow",
+            "list": true,
+            "id": "seqLoop_7-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+          }
+        ],
+        "inputs": {
+          "sequentialNode": [
+            "{{seqCondition_1.data.instance}}"
+          ],
+          "loopToName": "FileSystemManager"
+        },
+        "outputAnchors": [],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 242,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3638.153212587294,
+        "y": -503.18022819201246
+      },
+      "dragging": false
+    },
+    {
+      "id": "seqAgent_0",
+      "position": {
+        "x": 3009.655853862086,
+        "y": -258.243554717272
+      },
+      "type": "customNode",
+      "data": {
+        "id": "seqAgent_0",
+        "label": "Agent",
+        "version": 4.1,
+        "name": "seqAgent",
+        "type": "Agent",
+        "baseClasses": [
+          "Agent"
+        ],
+        "category": "Sequential Agents",
+        "description": "Agent that can execute tools",
+        "inputParams": [
+          {
+            "label": "Agent Name",
+            "name": "agentName",
+            "type": "string",
+            "placeholder": "Agent",
+            "id": "seqAgent_0-input-agentName-string"
+          },
+          {
+            "label": "System Prompt",
+            "name": "systemMessagePrompt",
+            "type": "string",
+            "rows": 4,
+            "optional": true,
+            "default": "You are a research assistant who can search for up-to-date info using search engine.",
+            "id": "seqAgent_0-input-systemMessagePrompt-string"
+          },
+          {
+            "label": "Prepend Messages History",
+            "name": "messageHistory",
+            "description": "Prepend a list of messages between System Prompt and Human Prompt. This is useful when you want to provide few shot examples",
+            "type": "code",
+            "hideCodeExecute": true,
+            "codeExample": "const { AIMessage, HumanMessage, ToolMessage } = require('@langchain/core/messages');\n\nreturn [\n    new HumanMessage(\"What is 333382 🦜 1932?\"),\n    new AIMessage({\n        content: \"\",\n        tool_calls: [\n        {\n            id: \"12345\",\n            name: \"calulator\",\n            args: {\n                number1: 333382,\n                number2: 1932,\n                operation: \"divide\",\n            },\n        },\n        ],\n    }),\n    new ToolMessage({\n        tool_call_id: \"12345\",\n        content: \"The answer is 172.558.\",\n    }),\n    new AIMessage(\"The answer is 172.558.\"),\n]",
+            "optional": true,
+            "additionalParams": true,
+            "id": "seqAgent_0-input-messageHistory-code"
+          },
+          {
+            "label": "Conversation History",
+            "name": "conversationHistorySelection",
+            "type": "options",
+            "options": [
+              {
+                "label": "User Question",
+                "name": "user_question",
+                "description": "Use the user question from the historical conversation messages as input."
+              },
+              {
+                "label": "Last Conversation Message",
+                "name": "last_message",
+                "description": "Use the last conversation message from the historical conversation messages as input."
+              },
+              {
+                "label": "All Conversation Messages",
+                "name": "all_messages",
+                "description": "Use all conversation messages from the historical conversation messages as input."
+              },
+              {
+                "label": "Empty",
+                "name": "empty",
+                "description": "Do not use any messages from the conversation history. Ensure to use either System Prompt, Human Prompt, or Messages History."
+              }
+            ],
+            "default": "all_messages",
+            "optional": true,
+            "description": "Select which messages from the conversation history to include in the prompt. The selected messages will be inserted between the System Prompt (if defined) and [Messages History, Human Prompt].",
+            "additionalParams": true,
+            "id": "seqAgent_0-input-conversationHistorySelection-options"
+          },
+          {
+            "label": "Human Prompt",
+            "name": "humanMessagePrompt",
+            "type": "string",
+            "description": "This prompt will be added at the end of the messages as human message",
+            "rows": 4,
+            "optional": true,
+            "additionalParams": true,
+            "id": "seqAgent_0-input-humanMessagePrompt-string"
+          },
+          {
+            "label": "Require Approval",
+            "name": "interrupt",
+            "description": "Pause execution and request user approval before running tools.\nIf enabled, the agent will prompt the user with customizable approve/reject options\nand will proceed only after approval. This requires a configured agent memory to manage\nthe state and handle approval requests.\nIf no tools are invoked, the agent proceeds without interruption.",
+            "type": "boolean",
+            "optional": true,
+            "id": "seqAgent_0-input-interrupt-boolean"
+          },
+          {
+            "label": "Format Prompt Values",
+            "name": "promptValues",
+            "description": "Assign values to the prompt variables. You can also use $flow.state.<variable-name> to get the state value",
+            "type": "json",
+            "optional": true,
+            "acceptVariable": true,
+            "list": true,
+            "id": "seqAgent_0-input-promptValues-json"
+          },
+          {
+            "label": "Approval Prompt",
+            "name": "approvalPrompt",
+            "description": "Prompt for approval. Only applicable if \"Require Approval\" is enabled",
+            "type": "string",
+            "default": "You are about to execute tool: {tools}. Ask if user want to proceed",
+            "rows": 4,
+            "optional": true,
+            "additionalParams": true,
+            "id": "seqAgent_0-input-approvalPrompt-string"
+          },
+          {
+            "label": "Approve Button Text",
+            "name": "approveButtonText",
+            "description": "Text for approve button. Only applicable if \"Require Approval\" is enabled",
+            "type": "string",
+            "default": "Yes",
+            "optional": true,
+            "additionalParams": true,
+            "id": "seqAgent_0-input-approveButtonText-string"
+          },
+          {
+            "label": "Reject Button Text",
+            "name": "rejectButtonText",
+            "description": "Text for reject button. Only applicable if \"Require Approval\" is enabled",
+            "type": "string",
+            "default": "No",
+            "optional": true,
+            "additionalParams": true,
+            "id": "seqAgent_0-input-rejectButtonText-string"
+          },
+          {
+            "label": "Update State",
+            "name": "updateStateMemory",
+            "type": "tabs",
+            "tabIdentifier": "selectedUpdateStateMemoryTab",
+            "additionalParams": true,
+            "default": "updateStateMemoryUI",
+            "tabs": [
+              {
+                "label": "Update State (Table)",
+                "name": "updateStateMemoryUI",
+                "type": "datagrid",
+                "hint": {
+                  "label": "How to use",
+                  "value": "\n1. Key and value pair to be updated. For example: if you have the following State:\n    | Key       | Operation     | Default Value     |\n    |-----------|---------------|-------------------|\n    | user      | Replace       |                   |\n\n    You can update the \"user\" value with the following:\n    | Key       | Value     |\n    |-----------|-----------|\n    | user      | john doe  |\n\n2. If you want to use the Agent's output as the value to update state, it is available as available as `$flow.output` with the following structure:\n    ```json\n    {\n        \"content\": \"Hello! How can I assist you today?\",\n        \"usedTools\": [\n            {\n                \"tool\": \"tool-name\",\n                \"toolInput\": \"{foo: var}\",\n                \"toolOutput\": \"This is the tool's output\"\n            }\n        ],\n        \"sourceDocuments\": [\n            {\n                \"pageContent\": \"This is the page content\",\n                \"metadata\": \"{foo: var}\"\n            }\n        ]\n    }\n    ```\n\n    For example, if the `toolOutput` is the value you want to update the state with, you can do the following:\n    | Key       | Value                                     |\n    |-----------|-------------------------------------------|\n    | user      | `$flow.output.usedTools[0].toolOutput`  |\n\n3. You can get default flow config, including the current \"state\":\n    - `$flow.sessionId`\n    - `$flow.chatId`\n    - `$flow.chatflowId`\n    - `$flow.input`\n    - `$flow.state`\n\n4. You can get custom variables: `$vars.<variable-name>`\n\n"
+                },
+                "description": "This is only applicable when you have a custom State at the START node. After agent execution, you might want to update the State values",
+                "datagrid": [
+                  {
+                    "field": "key",
+                    "headerName": "Key",
+                    "type": "asyncSingleSelect",
+                    "loadMethod": "loadStateKeys",
+                    "flex": 0.5,
+                    "editable": true
+                  },
+                  {
+                    "field": "value",
+                    "headerName": "Value",
+                    "type": "freeSolo",
+                    "valueOptions": [
+                      {
+                        "label": "Agent Output (string)",
+                        "value": "$flow.output.content"
+                      },
+                      {
+                        "label": "Used Tools (array)",
+                        "value": "$flow.output.usedTools"
+                      },
+                      {
+                        "label": "First Tool Output (string)",
+                        "value": "$flow.output.usedTools[0].toolOutput"
+                      },
+                      {
+                        "label": "Source Documents (array)",
+                        "value": "$flow.output.sourceDocuments"
+                      },
+                      {
+                        "label": "Global variable (string)",
+                        "value": "$vars.<variable-name>"
+                      },
+                      {
+                        "label": "Input Question (string)",
+                        "value": "$flow.input"
+                      },
+                      {
+                        "label": "Session Id (string)",
+                        "value": "$flow.sessionId"
+                      },
+                      {
+                        "label": "Chat Id (string)",
+                        "value": "$flow.chatId"
+                      },
+                      {
+                        "label": "Chatflow Id (string)",
+                        "value": "$flow.chatflowId"
+                      }
+                    ],
+                    "editable": true,
+                    "flex": 1
+                  }
+                ],
+                "optional": true,
+                "additionalParams": true
+              },
+              {
+                "label": "Update State (Code)",
+                "name": "updateStateMemoryCode",
+                "type": "code",
+                "hint": {
+                  "label": "How to use",
+                  "value": "\n1. Return the key value JSON object. For example: if you have the following State:\n    ```json\n    {\n        \"user\": null\n    }\n    ```\n\n    You can update the \"user\" value by returning the following:\n    ```js\n    return {\n        \"user\": \"john doe\"\n    }\n    ```\n\n2. If you want to use the agent's output as the value to update state, it is available as `$flow.output` with the following structure:\n    ```json\n    {\n        \"content\": \"Hello! How can I assist you today?\",\n        \"usedTools\": [\n            {\n                \"tool\": \"tool-name\",\n                \"toolInput\": \"{foo: var}\",\n                \"toolOutput\": \"This is the tool's output\"\n            }\n        ],\n        \"sourceDocuments\": [\n            {\n                \"pageContent\": \"This is the page content\",\n                \"metadata\": \"{foo: var}\"\n            }\n        ]\n    }\n    ```\n\n    For example, if the `toolOutput` is the value you want to update the state with, you can return the following:\n    ```js\n    return {\n        \"user\": $flow.output.usedTools[0].toolOutput\n    }\n    ```\n\n3. You can also get default flow config, including the current \"state\":\n    - `$flow.sessionId`\n    - `$flow.chatId`\n    - `$flow.chatflowId`\n    - `$flow.input`\n    - `$flow.state`\n\n4. You can get custom variables: `$vars.<variable-name>`\n\n"
+                },
+                "description": "This is only applicable when you have a custom State at the START node. After agent execution, you might want to update the State values. Must return an object representing the state",
+                "hideCodeExecute": true,
+                "codeExample": "const result = $flow.output;\n\n/* Suppose we have a custom State schema like this:\n* {\n    aggregate: {\n        value: (x, y) => x.concat(y),\n        default: () => []\n    }\n  }\n*/\n\nreturn {\n  aggregate: [result.content]\n};",
+                "optional": true,
+                "additionalParams": true
+              }
+            ],
+            "id": "seqAgent_0-input-updateStateMemory-tabs"
+          },
+          {
+            "label": "Max Iterations",
+            "name": "maxIterations",
+            "type": "number",
+            "optional": true,
+            "additionalParams": true,
+            "id": "seqAgent_0-input-maxIterations-number"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Tools",
+            "name": "tools",
+            "type": "Tool",
+            "list": true,
+            "optional": true,
+            "id": "seqAgent_0-input-tools-Tool"
+          },
+          {
+            "label": "Sequential Node",
+            "name": "sequentialNode",
+            "type": "Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+            "description": "Can be connected to one of the following nodes: Start, Agent, Condition, LLM Node, Tool Node, Custom Function, Execute Flow",
+            "list": true,
+            "id": "seqAgent_0-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+          },
+          {
+            "label": "Chat Model",
+            "name": "model",
+            "type": "BaseChatModel",
+            "optional": true,
+            "description": "Overwrite model to be used for this agent",
+            "id": "seqAgent_0-input-model-BaseChatModel"
+          }
+        ],
+        "inputs": {
+          "agentName": "write_file_content",
+          "systemMessagePrompt": "You are an expert at synthesizing content according to the provided instructions and conversation history.\n{instruction}\nWhen receiving a content creation instruction, assess whether adequate research has been done. If not, recommend returning to research phase first.\n\nFile write strategy: Overwrite contents",
+          "messageHistory": "",
+          "conversationHistorySelection": "all_messages",
+          "humanMessagePrompt": "",
+          "tools": [
+            "{{customMCP_3.data.instance}}"
+          ],
+          "sequentialNode": [
+            "{{seqCondition_1.data.instance}}"
+          ],
+          "model": "",
+          "interrupt": "",
+          "promptValues": "{\"instruction\":\"$flow.state.instruction\"}",
+          "approvalPrompt": "You are about to execute tool: {tools}. Ask if user want to proceed",
+          "approveButtonText": "Yes",
+          "rejectButtonText": "No",
+          "updateStateMemory": "updateStateMemoryUI",
+          "maxIterations": ""
+        },
+        "outputAnchors": [
+          {
+            "id": "seqAgent_0-output-seqAgent-Agent",
+            "name": "seqAgent",
+            "label": "Agent",
+            "description": "Agent that can execute tools",
+            "type": "Agent"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 860,
+      "positionAbsolute": {
+        "x": 3009.655853862086,
+        "y": -258.243554717272
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "customMCP_3",
+      "position": {
+        "x": 2677.596515725679,
+        "y": -632.9773525385917
+      },
+      "type": "customNode",
+      "data": {
+        "id": "customMCP_3",
+        "label": "Custom MCP",
+        "version": 1,
+        "name": "customMCP",
+        "type": "Custom MCP Tool",
+        "baseClasses": [
+          "Tool"
+        ],
+        "category": "Tools (MCP)",
+        "description": "Custom MCP Config",
+        "inputParams": [
+          {
+            "label": "MCP Server Config",
+            "name": "mcpServerConfig",
+            "type": "code",
+            "hideCodeExecute": true,
+            "placeholder": "{\n    \"command\": \"npx\",\n    \"args\": [\"-y\", \"@modelcontextprotocol/server-filesystem\", \"/path/to/allowed/files\"]\n}",
+            "id": "customMCP_3-input-mcpServerConfig-code"
+          },
+          {
+            "label": "Available Actions",
+            "name": "mcpActions",
+            "type": "asyncMultiOptions",
+            "loadMethod": "listActions",
+            "refresh": true,
+            "id": "customMCP_3-input-mcpActions-asyncMultiOptions"
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "mcpServerConfig": "{\n  \"command\": \"bunx\",\n  \"args\": [\n    \"-y\",\n    \"supergateway\",\n    \"--sse\",\n    \"http://localhost:8002/sse\"\n  ]\n}",
+          "mcpActions": "[\"file_write\"]"
+        },
+        "outputAnchors": [
+          {
+            "id": "customMCP_3-output-customMCP-Tool",
+            "name": "customMCP",
+            "label": "Custom MCP Tool",
+            "description": "Custom MCP Config",
+            "type": "Tool"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 546,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2677.596515725679,
+        "y": -632.9773525385917
+      },
+      "dragging": false
+    },
+    {
+      "id": "seqLoop_8",
+      "position": {
+        "x": 3329.9258801279134,
+        "y": 361.27391026223324
+      },
+      "type": "customNode",
+      "data": {
+        "id": "seqLoop_8",
+        "label": "Loop",
+        "version": 2.1,
+        "name": "seqLoop",
+        "type": "Loop",
+        "baseClasses": [
+          "Loop"
+        ],
+        "category": "Sequential Agents",
+        "description": "Loop back to the specific sequential node",
+        "inputParams": [
+          {
+            "label": "Loop To",
+            "name": "loopToName",
+            "description": "Name of the agent/llm to loop back to",
+            "type": "string",
+            "placeholder": "Agent",
+            "id": "seqLoop_8-input-loopToName-string"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Sequential Node",
+            "name": "sequentialNode",
+            "type": "Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+            "description": "Can be connected to one of the following nodes: Agent, Condition, LLM Node, Tool Node, Custom Function, Execute Flow",
+            "list": true,
+            "id": "seqLoop_8-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+          }
+        ],
+        "inputs": {
+          "sequentialNode": [
+            "{{seqAgent_0.data.instance}}"
+          ],
+          "loopToName": "Supervisor"
+        },
+        "outputAnchors": [],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 242,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3329.9258801279134,
+        "y": 361.27391026223324
+      },
+      "dragging": false
+    },
+    {
+      "id": "stickyNote_4",
+      "position": {
+        "x": 3324.2771152202763,
+        "y": -260.2039355346217
+      },
+      "type": "stickyNote",
+      "data": {
+        "id": "stickyNote_4",
+        "label": "Sticky Note",
+        "version": 2,
+        "name": "stickyNote",
+        "type": "StickyNote",
+        "baseClasses": [
+          "StickyNote"
+        ],
+        "tags": [
+          "Utilities"
+        ],
+        "category": "Utilities",
+        "description": "Add a sticky note",
+        "inputParams": [
+          {
+            "label": "",
+            "name": "note",
+            "type": "string",
+            "rows": 1,
+            "placeholder": "Type something here",
+            "optional": true,
+            "id": "stickyNote_4-input-note-string"
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "note": "This is an expensive api call as it uses the entire message history as its context, this we need extra logic to only invoke it when required."
+        },
+        "outputAnchors": [
+          {
+            "id": "stickyNote_4-output-stickyNote-StickyNote",
+            "name": "stickyNote",
+            "label": "StickyNote",
+            "description": "Add a sticky note",
+            "type": "StickyNote"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 103,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 3324.2771152202763,
+        "y": -260.2039355346217
+      }
+    },
+    {
+      "id": "seqLoop_9",
+      "position": {
+        "x": 3322.6618117394037,
+        "y": -505.6660585939353
+      },
+      "type": "customNode",
+      "data": {
+        "id": "seqLoop_9",
+        "label": "Loop",
+        "version": 2.1,
+        "name": "seqLoop",
+        "type": "Loop",
+        "baseClasses": [
+          "Loop"
+        ],
+        "category": "Sequential Agents",
+        "description": "Loop back to the specific sequential node",
+        "inputParams": [
+          {
+            "label": "Loop To",
+            "name": "loopToName",
+            "description": "Name of the agent/llm to loop back to",
+            "type": "string",
+            "placeholder": "Agent",
+            "id": "seqLoop_9-input-loopToName-string"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Sequential Node",
+            "name": "sequentialNode",
+            "type": "Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+            "description": "Can be connected to one of the following nodes: Agent, Condition, LLM Node, Tool Node, Custom Function, Execute Flow",
+            "list": true,
+            "id": "seqLoop_9-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+          }
+        ],
+        "inputs": {
+          "sequentialNode": [
+            "{{seqCondition_1.data.instance}}"
+          ],
+          "loopToName": "Supervisor"
+        },
+        "outputAnchors": [],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 242,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3322.6618117394037,
+        "y": -505.6660585939353
+      },
+      "dragging": false
     }
   ],
   "edges": [
@@ -5601,15 +6571,6 @@
       "targetHandle": "seqAgent_1-input-tools-Tool",
       "type": "buttonedge",
       "id": "customMCP_2-customMCP_2-output-customMCP-Tool-seqAgent_1-seqAgent_1-input-tools-Tool",
-      "selected": false
-    },
-    {
-      "source": "customMCP_1",
-      "sourceHandle": "customMCP_1-output-customMCP-Tool",
-      "target": "seqAgent_0",
-      "targetHandle": "seqAgent_0-input-tools-Tool",
-      "type": "buttonedge",
-      "id": "customMCP_1-customMCP_1-output-customMCP-Tool-seqAgent_0-seqAgent_0-input-tools-Tool",
       "selected": false
     },
     {
@@ -5716,7 +6677,8 @@
       "target": "seqToolNode_0",
       "targetHandle": "seqToolNode_0-input-tools-Tool",
       "type": "buttonedge",
-      "id": "retrieverTool_0-retrieverTool_0-output-retrieverTool-RetrieverTool|DynamicTool|Tool|StructuredTool|Runnable-seqToolNode_0-seqToolNode_0-input-tools-Tool"
+      "id": "retrieverTool_0-retrieverTool_0-output-retrieverTool-RetrieverTool|DynamicTool|Tool|StructuredTool|Runnable-seqToolNode_0-seqToolNode_0-input-tools-Tool",
+      "selected": false
     },
     {
       "source": "seqCondition_0",
@@ -5724,15 +6686,8 @@
       "target": "seqLLMNode_4",
       "targetHandle": "seqLLMNode_4-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
       "type": "buttonedge",
-      "id": "seqCondition_0-seqCondition_0-output-knowledgebase-Condition-seqLLMNode_4-seqLLMNode_4-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
-    },
-    {
-      "source": "seqAgent_0",
-      "sourceHandle": "seqAgent_0-output-seqAgent-Agent",
-      "target": "seqLoop_2",
-      "targetHandle": "seqLoop_2-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
-      "type": "buttonedge",
-      "id": "seqAgent_0-seqAgent_0-output-seqAgent-Agent-seqLoop_2-seqLoop_2-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+      "id": "seqCondition_0-seqCondition_0-output-knowledgebase-Condition-seqLLMNode_4-seqLLMNode_4-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "selected": false
     },
     {
       "source": "seqLLMNode_4",
@@ -5740,7 +6695,8 @@
       "target": "seqToolNode_0",
       "targetHandle": "seqToolNode_0-input-llmNode-LLMNode",
       "type": "buttonedge",
-      "id": "seqLLMNode_4-seqLLMNode_4-output-seqLLMNode-LLMNode-seqToolNode_0-seqToolNode_0-input-llmNode-LLMNode"
+      "id": "seqLLMNode_4-seqLLMNode_4-output-seqLLMNode-LLMNode-seqToolNode_0-seqToolNode_0-input-llmNode-LLMNode",
+      "selected": false
     },
     {
       "source": "seqLLMNode_1",
@@ -5766,7 +6722,8 @@
       "target": "seqLoop_5",
       "targetHandle": "seqLoop_5-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
       "type": "buttonedge",
-      "id": "seqLLMNode_2-seqLLMNode_2-output-seqLLMNode-LLMNode-seqLoop_5-seqLoop_5-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+      "id": "seqLLMNode_2-seqLLMNode_2-output-seqLLMNode-LLMNode-seqLoop_5-seqLoop_5-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "selected": false
     },
     {
       "source": "seqCustomFunction_0",
@@ -5792,7 +6749,8 @@
       "target": "seqCustomFunction_1",
       "targetHandle": "seqCustomFunction_1-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
       "type": "buttonedge",
-      "id": "seqCondition_0-seqCondition_0-output-messageaskuser-Condition-seqCustomFunction_1-seqCustomFunction_1-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+      "id": "seqCondition_0-seqCondition_0-output-messageaskuser-Condition-seqCustomFunction_1-seqCustomFunction_1-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "selected": false
     },
     {
       "source": "seqCondition_0",
@@ -5800,7 +6758,8 @@
       "target": "seqCustomFunction_0",
       "targetHandle": "seqCustomFunction_0-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
       "type": "buttonedge",
-      "id": "seqCondition_0-seqCondition_0-output-messagenotifyuser-Condition-seqCustomFunction_0-seqCustomFunction_0-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+      "id": "seqCondition_0-seqCondition_0-output-messagenotifyuser-Condition-seqCustomFunction_0-seqCustomFunction_0-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "selected": false
     },
     {
       "source": "chatAnthropic_0",
@@ -5829,12 +6788,86 @@
       "id": "plainText_0-plainText_0-output-document-Document|json-setVariable_1-setVariable_1-input-input-string | number | boolean | json | array"
     },
     {
+      "source": "seqLLMNode_5",
+      "sourceHandle": "seqLLMNode_5-output-seqLLMNode-LLMNode",
+      "target": "seqToolNode_1",
+      "targetHandle": "seqToolNode_1-input-llmNode-LLMNode",
+      "type": "buttonedge",
+      "id": "seqLLMNode_5-seqLLMNode_5-output-seqLLMNode-LLMNode-seqToolNode_1-seqToolNode_1-input-llmNode-LLMNode",
+      "selected": false
+    },
+    {
+      "source": "seqToolNode_1",
+      "sourceHandle": "seqToolNode_1-output-seqToolNode-ToolNode",
+      "target": "seqCondition_1",
+      "targetHandle": "seqCondition_1-input-sequentialNode-Start | Agent | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "type": "buttonedge",
+      "id": "seqToolNode_1-seqToolNode_1-output-seqToolNode-ToolNode-seqCondition_1-seqCondition_1-input-sequentialNode-Start | Agent | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "selected": false
+    },
+    {
       "source": "seqCondition_0",
       "sourceHandle": "seqCondition_0-output-filesystemmanager-Condition",
+      "target": "seqLLMNode_5",
+      "targetHandle": "seqLLMNode_5-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "type": "buttonedge",
+      "id": "seqCondition_0-seqCondition_0-output-filesystemmanager-Condition-seqLLMNode_5-seqLLMNode_5-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+    },
+    {
+      "source": "customMCP_1",
+      "sourceHandle": "customMCP_1-output-customMCP-Tool",
+      "target": "seqToolNode_1",
+      "targetHandle": "seqToolNode_1-input-tools-Tool",
+      "type": "buttonedge",
+      "id": "customMCP_1-customMCP_1-output-customMCP-Tool-seqToolNode_1-seqToolNode_1-input-tools-Tool"
+    },
+    {
+      "source": "seqCondition_1",
+      "sourceHandle": "seqCondition_1-output-write_file_content-Condition",
       "target": "seqAgent_0",
       "targetHandle": "seqAgent_0-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
       "type": "buttonedge",
-      "id": "seqCondition_0-seqCondition_0-output-filesystemmanager-Condition-seqAgent_0-seqAgent_0-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+      "id": "seqCondition_1-seqCondition_1-output-write_file_content-Condition-seqAgent_0-seqAgent_0-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+    },
+    {
+      "source": "customMCP_3",
+      "sourceHandle": "customMCP_3-output-customMCP-Tool",
+      "target": "seqAgent_0",
+      "targetHandle": "seqAgent_0-input-tools-Tool",
+      "type": "buttonedge",
+      "id": "customMCP_3-customMCP_3-output-customMCP-Tool-seqAgent_0-seqAgent_0-input-tools-Tool"
+    },
+    {
+      "source": "seqAgent_0",
+      "sourceHandle": "seqAgent_0-output-seqAgent-Agent",
+      "target": "seqLoop_8",
+      "targetHandle": "seqLoop_8-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "type": "buttonedge",
+      "id": "seqAgent_0-seqAgent_0-output-seqAgent-Agent-seqLoop_8-seqLoop_8-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+    },
+    {
+      "source": "seqCondition_1",
+      "sourceHandle": "seqCondition_1-output-true-Condition",
+      "target": "seqLoop_2",
+      "targetHandle": "seqLoop_2-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "type": "buttonedge",
+      "id": "seqCondition_1-seqCondition_1-output-true-Condition-seqLoop_2-seqLoop_2-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+    },
+    {
+      "source": "seqCondition_1",
+      "sourceHandle": "seqCondition_1-output-false-Condition",
+      "target": "seqLoop_9",
+      "targetHandle": "seqLoop_9-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "type": "buttonedge",
+      "id": "seqCondition_1-seqCondition_1-output-false-Condition-seqLoop_9-seqLoop_9-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+    },
+    {
+      "source": "seqCondition_1",
+      "sourceHandle": "seqCondition_1-output-filesystemmanager-Condition",
+      "target": "seqLoop_7",
+      "targetHandle": "seqLoop_7-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "type": "buttonedge",
+      "id": "seqCondition_1-seqCondition_1-output-filesystemmanager-Condition-seqLoop_7-seqLoop_7-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
     }
   ]
 }

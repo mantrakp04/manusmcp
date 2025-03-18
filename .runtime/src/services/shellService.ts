@@ -222,7 +222,7 @@ export class ShellService {
 
             // Create shell session to run bun commands
             return {
-                message: "NextJS runtime attached. It comes pre-configured with shadcn/ui and framer-motion & uses bun as the package manager.\n" +
+                message: "NextJS runtime attached at dir: `/home`. It comes pre-configured with shadcn/ui and framer-motion & uses bun as the package manager.\n" +
                 "## General Instructions\n" +
                 "- Always up-to-date with the latest technologies and best practices.\n" +
                 "- Default to Next.js App Router" +
