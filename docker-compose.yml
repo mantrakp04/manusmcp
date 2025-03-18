@@ -1,47 +1,43 @@
-# 1. Custom Flowise Image with a volume attached to the current directory
-# 2. Litellm docker run ghcr.io/berriai/litellm:main-latest --config your_config.yaml
-# 3. Unstructured docker run -p 8000:8000 -d --rm --name unstructured-api downloads.unstructured.io/unstructured-io/unstructured-api:latest
-
 version: '3.8'
 
 services:
   # 1. Custom Flowise Image with a volume attached to the current directory
   flowise:
+    image: flowiseai/flowise
+    ports:
+      - "8001:8000"
+    environment:
+      - PORT=8000
+    restart: unless-stopped
+
+  # 2. MCP Service
+  mcp:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
+      - "8002:8000"
       - "3000:3000"
-    volumes:
-      - ./.cache/:/mnt/data
-    environment:
-      - PORT=3000
-      - DATABASE_PATH=/mnt/data/.flowise
-      - APIKEY_PATH=/mnt/data/.flowise
-      - SECRETKEY_PATH=/mnt/data/.flowise
-      - LOG_PATH=/mnt/data/.flowise/logs
-      - BLOB_STORAGE_PATH=/mnt/data/.flowise/storage
-      - DISABLE_FLOWISE_TELEMETRY=true
-      # - FLOWISE_USERNAME=user
-      # - FLOWISE_PASSWORD=1234
     restart: unless-stopped
-
-  # 2. LiteLLM service
-  # litellm:
-  #   image: ghcr.io/berriai/litellm:main-latest
-  #   command: --config /app/config/config.yml
-  #   ports:
-  #     - "4000:4000"
-  #   volumes:
-  #     - ./litellm:/app/config
-  #   restart: unless-stopped
 
   # 3. Unstructured API service
   unstructured:
     image: downloads.unstructured.io/unstructured-io/unstructured-api:latest
     ports:
-      - "8000:8000"
+      - "8003:8000"
     restart: unless-stopped
+
+  # 4. LiteLLM service
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    command: --config litellm.yml
+    ports:
+      - "8004:4000"
+    volumes:
+      - ./:/app/config
+    restart: unless-stopped
+    env_file:
+      - .env
 
 networks:
   default:

@@ -3,10 +3,17 @@ import { exec } from 'child_process';
 import { promisify } from 'util';
 import { glob } from 'glob';
 import type { FileOperationResult } from '../types';
+import { ShellService } from './shellService';
 
 const execAsync = promisify(exec);
 
 export class FileService {
+    private shellService: ShellService;
+
+    constructor(shellService: ShellService) {
+        this.shellService = shellService;
+    }
+
     async readFile(
         file: string,
         startLine?: number,
@@ -91,7 +98,21 @@ export class FileService {
                 await fs.writeFile(file, finalContent, { flag });
             }
 
-            return { success: true };
+            // Run linter if NextJS runtime is attached and linter is enabled
+            const result: FileOperationResult = { success: true };
+            
+            if (this.shellService.isNextJSRuntimeAttached() && this.shellService.isLinterEnabled()) {
+                const lintResult = await this.shellService.runLinter();
+                
+                // Include lint results in the response
+                result.lintResult = {
+                    success: lintResult.success ?? false,
+                    output: lintResult.lintOutput,
+                    returnCode: lintResult.lintReturnCode
+                };
+            }
+
+            return result;
         } catch (e) {
             return { error: e instanceof Error ? e.message : String(e) };
         }

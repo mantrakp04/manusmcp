@@ -22,30 +22,19 @@ cd ..
 
 ## Usage
 
-### Option 1: Manual setup with Flowise
-
-1. Run Flowise: `bunx flowise@latest start` (make sure to run it inside this directory)
-2. Open Flowise UI in your browser (default: <http://localhost:3000>)
-3. Go to "Agentflows" section
-4. Click Settings (Top Right)
-5. Click Import and select the agent flow configuration file
-
-### Option 2: Run it with docker
+### 1: Run it with docker
 
 ```bash
+cp .env.example .env
 docker-compose up -d
 ```
 
-#### Import flow
+### 2: Open Flowise
 
-```bash
-curl -L \
-  --request POST \
-  --url 'http://localhost:3000/chatflows' \
-  --header 'Authorization: Bearer JWT' \
-  --header 'Content-Type: application/json' \
-  --data '@flow.json'
-```
+1. Open Flowise UI in your [browser](http://localhost:8001)
+2. Go to "Agentflows" section
+3. Click Settings (Top Right)
+4. Click Import and select the agent flow configuration file
 
 ### [Optional] Checkout the MCP Server
 
@@ -59,6 +48,8 @@ Recommended runtime: [`bun`](https://bun.sh/)
 ## Project Structure
 
 - `.runtime/` - Contains the Model Context Protocol server implementation
+- `.runtime/templates/nextjs` - Contains the Next.js template
+- `flow.json` - The agent flow configuration file
 
 ## Agent Members
 

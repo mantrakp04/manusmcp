@@ -3,8 +3,8 @@
     {
       "id": "sqliteAgentMemory_0",
       "position": {
-        "x": 255.61373758408138,
-        "y": 718.9806469569425
+        "x": 378.27438279911416,
+        "y": 721.5502841644658
       },
       "type": "customNode",
       "data": {
@@ -48,8 +48,8 @@
       "width": 300,
       "height": 253,
       "positionAbsolute": {
-        "x": 255.61373758408138,
-        "y": 718.9806469569425
+        "x": 378.27438279911416,
+        "y": 721.5502841644658
       },
       "selected": false,
       "dragging": false
@@ -319,7 +319,7 @@
           }
         ],
         "inputs": {
-          "agentName": "FileWizard",
+          "agentName": "FileSystemManager",
           "systemMessagePrompt": "You are a file system expert who can manipulate and organize digital content. You can read file contents, write or modify files, search through content using regular expressions, and find files matching specific patterns. Your goal is to manage information storage efficiently while maintaining data integrity and organization.",
           "messageHistory": "",
           "conversationHistorySelection": "last_message",
@@ -352,7 +352,7 @@
         "selected": false
       },
       "width": 300,
-      "height": 861,
+      "height": 860,
       "selected": false,
       "positionAbsolute": {
         "x": 2056.8432419957353,
@@ -363,8 +363,8 @@
     {
       "id": "seqStart_0",
       "position": {
-        "x": 712.8322675974305,
-        "y": 770.1528223289484
+        "x": 718.9582951853438,
+        "y": 777.632429430604
       },
       "type": "customNode",
       "data": {
@@ -434,8 +434,8 @@
       "width": 300,
       "height": 383,
       "positionAbsolute": {
-        "x": 712.8322675974305,
-        "y": 770.1528223289484
+        "x": 718.9582951853438,
+        "y": 777.632429430604
       },
       "selected": false,
       "dragging": false
@@ -443,8 +443,8 @@
     {
       "id": "seqState_0",
       "position": {
-        "x": 254.26473752593864,
-        "y": 980.7965400267974
+        "x": 376.9253827409715,
+        "y": 983.3661772343207
       },
       "type": "customNode",
       "data": {
@@ -519,7 +519,7 @@
         "inputAnchors": [],
         "inputs": {
           "stateMemory": "stateMemoryUI",
-          "stateMemoryUI": "[{\"key\":\"next\",\"type\":\"Replace\",\"defaultValue\":\"\",\"actions\":\"\",\"id\":0},{\"key\":\"plan\",\"type\":\"Replace\",\"defaultValue\":\"\",\"actions\":\"\",\"id\":1},{\"key\":\"instruction\",\"type\":\"Replace\",\"defaultValue\":\"\",\"actions\":\"\",\"id\":2},{\"key\":\"sources\",\"type\":\"Replace\",\"defaultValue\":\"\",\"actions\":\"\",\"id\":3}]",
+          "stateMemoryUI": "[{\"key\":\"next\",\"type\":\"Replace\",\"defaultValue\":\"\",\"actions\":\"\",\"id\":0},{\"key\":\"plan\",\"type\":\"Replace\",\"defaultValue\":\"\",\"actions\":\"\",\"id\":1},{\"key\":\"instruction\",\"type\":\"Replace\",\"defaultValue\":\"\",\"actions\":\"\",\"id\":2},{\"key\":\"sources\",\"type\":\"Replace\",\"defaultValue\":\"\",\"actions\":\"\",\"id\":3},{\"key\":\"next_preview_path\",\"type\":\"Replace\",\"defaultValue\":\"[\\\"/\\\"]\",\"actions\":\"\",\"id\":4}]",
           "selectedStateTab_seqState_0": "stateMemoryUI",
           "stateMemoryCode": ""
         },
@@ -539,16 +539,16 @@
       "height": 253,
       "selected": false,
       "positionAbsolute": {
-        "x": 254.26473752593864,
-        "y": 980.7965400267974
+        "x": 376.9253827409715,
+        "y": 983.3661772343207
       },
       "dragging": false
     },
     {
       "id": "seqLLMNode_0",
       "position": {
-        "x": 1035.9890414980844,
-        "y": 772.1091841856423
+        "x": 1038.801014959234,
+        "y": 775.606366221068
       },
       "type": "customNode",
       "data": {
@@ -788,8 +788,8 @@
         ],
         "inputs": {
           "llmNodeName": "Supervisor",
-          "systemMessagePrompt": "You are Supervisor, an AI agent created by BarrelOfLube.\n\nYou excel at the following tasks:\n1. Information gathering, fact-checking, documentation, ui generation.\n2. Data processing, analysis, and visualization\n3. Writing multi-chapter articles and in-depth research reports\n4. Creating websites, applications, and tools\n5. Using programming to solve various problems beyond development\n6. Various tasks that can be accomplished using computers and the internet\n\nDefault working language: English\nUse the language specified by user in messages as the working language when explicitly provided\nAll thinking and responses must be in the working language\nNatural language arguments in tool calls must be in the working language\nAvoid using pure lists and bullet points format in any language\n\nSystem capabilities:\n- Access a Linux sandbox environment with internet connection\n- Use shell, text editor, and other software\n- Write and run code in Python and various programming languages\n- Independently install required software packages and dependencies via shell\n- Access and browse the web\n- Utilize various tools to complete user-assigned tasks step by step\n\nCurrent Plan:\n{plan}\n\nYou operate in an agent loop, iteratively completing tasks through these steps:\n1. Analyze Events: Understand user needs and how detailed/complex the task is and current state through event stream, focusing on plan, latest user messages and execution results\n2. Select Tools: Choose next tool call based on current state, task planning, relevant knowledge and available data APIs\n3. Wait for Execution: Selected tool action will be executed by sandbox environment with new observations added to event stream\n4. Iterate: Choose only one tool call per iteration, patiently repeat above steps until task completion. After task completion notify the user and update the plan.\n5. Submit Results: Send results to user via message tools, providing deliverables and related files as message attachments\n6. Finally: Enter FINISH state when all tasks are completed.",
-          "messageHistory": "const sourceDocuments = $vars.input_docs || [];\nif (sourceDocuments.length > 0) {\n  const formattedDocs = sourceDocuments.map(item => {\n    const pageContent = item.pageContent;\n    const metadata = `Sources: ${JSON.stringify(item.metadata)}`;\n    return `${pageContent}\\n${metadata}`;\n  }).join('\\n\\n');\n  \n  return String(formattedDocs);\n}",
+          "systemMessagePrompt": "You are Supervisor, an AI agent created by BarrelOfLube.\n\nYou excel at the following tasks:\n1. Information gathering, fact-checking, documentation, ui generation.\n2. Data processing, analysis, and visualization\n3. Writing multi-chapter articles and in-depth research reports\n4. Creating websites, applications, and tools\n5. Using programming to solve various problems beyond development\n6. Various tasks that can be accomplished using computers and the internet\n\nDefault working language: English\nUse the language specified by user in messages as the working language when explicitly provided\nAll thinking and responses must be in the working language\nNatural language arguments in tool calls must be in the working language\nAvoid using pure lists and bullet points format in any language\n\nSystem capabilities:\n- Access a Linux sandbox environment with internet connection\n- Use shell, text editor, and other software\n- Write and run code in Python and various programming languages\n- Independently install required software packages and dependencies via shell\n- Access and browse the web\n- Utilize various tools to complete user-assigned tasks step by step\n\nCurrent Plan:\n{plan}\n\nYou operate in an agent loop, iteratively completing tasks through these steps:\n\n1. TASK DECOMPOSITION: Break down complex requests into logical sequential steps. For content creation tasks, ALWAYS follow this sequence:\n   a) Research and data gathering (using WebNavigator or Knowledgebase) FIRST\n   b) Analysis and synthesis of collected information\n   c) Content creation (using FileSystemManager) ONLY AFTER sufficient information is gathered\n   d) Review and refinement\n\n2. TOOL SELECTION: Choose the appropriate tool for each step:\n   - WebNavigator: For online research, browsing websites, gathering current information\n   - Knowledgebase: For accessing stored knowledge on topics\n   - CommandRunner: For executing shell commands, installing packages, running scripts\n   - FileSystemManager: For creating, reading, or modifying files AFTER research phase\n   - PlanManager: For creating or updating task plans\n   - MessageNotifyUser: For providing updates to the user\n   - MessageAskUser: For requesting additional information/clarification\n\n3. MESSAGE TOOL FORMATTING:\n   - When using MessageNotifyUser or MessageAskUser, write the COMPLETE, FINAL message text in the instruction field\n   - These tools pass your instruction text DIRECTLY to the user without any additional processing\n   - For MessageNotifyUser: Write a complete, informative update about progress or results\n   - For MessageAskUser: Write a clear, specific question with all necessary context included\n\n4. CONTEXT AWARENESS: Maintain awareness of the overall task context:\n   - For research tasks, gather comprehensive information before proceeding to content creation\n   - For multi-topic reports, research each major section thoroughly before writing\n   - Check with user after completing major task components\n\n5. EXECUTION: Execute one tool action per iteration and analyze results before proceeding\n   - Include sufficient context in each tool instruction\n   - For WebNavigator, provide detailed search instructions\n   - For FileWizard, only send after sufficient research is complete\n\n6. COMPLETION: Only enter FINISH state when all tasks are fully completed with satisfactory results",
+          "messageHistory": "const { AIMessage, HumanMessage, ToolMessage } = require('@langchain/core/messages');\nconst http = require('http');\n\nasync function activateNextJSRuntime() {\n  const host = 'localhost';\n  const port = 8002;\n  \n  return new Promise((resolve, reject) => {\n    let sessionId = null;\n    let toolCallSent = false;\n    \n    // Connect to SSE endpoint\n    const sseRequest = http.request({\n      hostname: host,\n      port: port,\n      path: '/sse',\n      method: 'GET',\n      headers: {'Accept': 'text/event-stream'}\n    }, (sseResponse) => {\n      if (sseResponse.statusCode !== 200) {\n        sseRequest.destroy();\n        return reject(new Error(`SSE connection failed: ${sseResponse.statusCode}`));\n      }\n      \n      let buffer = '';\n      \n      sseResponse.on('data', (chunk) => {\n        buffer += chunk.toString();\n        const lines = buffer.split('\\n');\n        buffer = lines.pop() || '';\n        \n        for (const line of lines) {\n          // Extract session ID\n          if (!sessionId && line.startsWith('data: /message?sessionId=')) {\n            const match = line.match(/sessionId=([^&\\s\\n]+)/);\n            if (match && match[1]) {\n              sessionId = match[1];\n              callNextJSRuntime(sessionId);\n            }\n          }\n          \n          // Process response\n          if (toolCallSent && line.startsWith('data: {')) {\n            try {\n              const jsonText = line.substring(6);\n              const messageData = JSON.parse(jsonText);\n              sseRequest.destroy();\n              resolve(messageData);\n            } catch (error) {\n              // Continue processing\n            }\n          }\n        }\n      });\n      \n      sseResponse.on('error', (error) => {\n        sseRequest.destroy();\n        reject(new Error(`SSE error: ${error.message}`));\n      });\n    });\n    \n    sseRequest.on('error', (error) => {\n      reject(new Error(`SSE connection failed: ${error.message}`));\n    });\n    \n    sseRequest.setTimeout(30000, () => {\n      sseRequest.destroy();\n      reject(new Error('Timeout: No response from SSE endpoint'));\n    });\n    \n    sseRequest.end();\n    \n    function callNextJSRuntime(sid) {\n      const postData = JSON.stringify({\n        jsonrpc: '2.0',\n        id: 2,\n        method: 'tools/call',\n        params: {\n          name: 'shell_attach_nextjs_runtime',\n          arguments: {useLinter: true}\n        }\n      });\n      \n      const activateRequest = http.request({\n        hostname: host,\n        port: port,\n        path: `/message?sessionId=${sid}`,\n        method: 'POST',\n        headers: {\n          'Content-Type': 'application/json',\n          'Content-Length': Buffer.byteLength(postData)\n        }\n      }, (activateResponse) => {\n        let responseData = '';\n        \n        activateResponse.on('data', (chunk) => {\n          responseData += chunk;\n        });\n        \n        activateResponse.on('end', () => {\n          if (activateResponse.statusCode === 202 || activateResponse.statusCode === 200) {\n            toolCallSent = true;\n            \n            if (activateResponse.statusCode === 200 && responseData) {\n              try {\n                const result = JSON.parse(responseData);\n                sseRequest.destroy();\n                resolve(result);\n              } catch (error) {\n                // Continue listening on SSE\n              }\n            }\n          } else {\n            sseRequest.destroy();\n            reject(new Error(`Activation failed: ${activateResponse.statusCode}`));\n          }\n        });\n      });\n      \n      activateRequest.on('error', (error) => {\n        sseRequest.destroy();\n        reject(new Error(`Activation request failed: ${error.message}`));\n      });\n      \n      activateRequest.write(postData);\n      activateRequest.end();\n    }\n  });\n}\n\nlet content = []\n\n// Add source docs\nconst sourceDocuments = $vars.input_docs || [];\nif (sourceDocuments.length > 0) {\n  const formattedDocs = sourceDocuments.map(item => {\n    const pageContent = item.pageContent;\n    const metadata = `Sources: ${JSON.stringify(item.metadata)}`;\n    return `${pageContent}\\n${metadata}`;\n  }).join('\\n\\n');\n  content = [...content, {type: \"text\", text: String(formattedDocs)}]\n}\n\n// Enable nextjs runtime\nconst enabled = $vars.is_nextjs_runtime_available === \"true\" ? true : false\nif (enabled) {\n  resp = await activateNextJSRuntime()\n  content = [...content, {type: \"text\", text: JSON.stringify(resp.result.content[0].text)}]\n}\n\nreturn [\n  new HumanMessage({\n    content: content\n  })\n]",
           "conversationHistorySelection": "all_messages",
           "humanMessagePrompt": "",
           "sequentialNode": [
@@ -797,7 +797,7 @@
           ],
           "model": "",
           "promptValues": "{\"plan\":\"$flow.state.plan\"}",
-          "llmStructuredOutput": "[{\"key\":\"next\",\"type\":\"Enum\",\"enumValues\":\"FINISH, FileWizard, CommandRunner, WebNavigator, PlanManager, Knowledgebase, MessageNotifyUser, MessageAskUser\",\"description\":\"\",\"actions\":\"\",\"id\":0},{\"key\":\"instruction\",\"type\":\"String\",\"enumValues\":\"\",\"description\":\"The specific instructions of the sub-task the next role should accomplish.\",\"actions\":\"\",\"id\":1}]",
+          "llmStructuredOutput": "[{\"key\":\"next\",\"type\":\"Enum\",\"enumValues\":\"FINISH, FileSystemManager, CommandRunner, WebNavigator, PlanManager, Knowledgebase, MessageNotifyUser, MessageAskUser\",\"description\":\"\",\"actions\":\"\",\"id\":0},{\"key\":\"instruction\",\"type\":\"String\",\"enumValues\":\"\",\"description\":\"The specific instructions of the sub-task the next role should accomplish.\",\"actions\":\"\",\"id\":1}]",
           "updateStateMemory": "updateStateMemoryUI",
           "updateStateMemoryUI": "[{\"key\":\"next\",\"value\":\"$flow.output.next\",\"actions\":\"\",\"id\":0},{\"key\":\"instruction\",\"value\":\"$flow.output.instruction\",\"actions\":\"\",\"id\":1}]"
         },
@@ -817,8 +817,8 @@
       "height": 433,
       "selected": false,
       "positionAbsolute": {
-        "x": 1035.9890414980844,
-        "y": 772.1091841856423
+        "x": 1038.801014959234,
+        "y": 775.606366221068
       },
       "dragging": false
     },
@@ -826,7 +826,7 @@
       "id": "seqCondition_0",
       "position": {
         "x": 1364.3569235259827,
-        "y": 773.9789288776261
+        "y": 775.1665673275612
       },
       "type": "customNode",
       "data": {
@@ -964,7 +964,7 @@
             "{{seqLLMNode_0.data.instance}}"
           ],
           "condition": "",
-          "conditionUI": "[{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"FileWizard\",\"output\":\"FileWizard\",\"actions\":\"\",\"id\":0},{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"CommandRunner\",\"output\":\"CommandRunner\",\"actions\":\"\",\"id\":1},{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"WebNavigator\",\"output\":\"WebNavigator\",\"actions\":\"\",\"id\":2},{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"PlanManager\",\"output\":\"PlanManager\",\"actions\":\"\",\"id\":3},{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"Knowledgebase\",\"output\":\"Knowledgebase\",\"actions\":\"\",\"id\":4},{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"MessageNotifyUser\",\"output\":\"MessageNotifyUser\",\"actions\":\"\",\"id\":5},{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"MessageAskUser\",\"output\":\"MessageAskUser\",\"actions\":\"\",\"id\":6}]",
+          "conditionUI": "[{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"FileSystemManager\",\"output\":\"FileSystemManager\",\"actions\":\"\",\"id\":0},{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"CommandRunner\",\"output\":\"CommandRunner\",\"actions\":\"\",\"id\":1},{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"WebNavigator\",\"output\":\"WebNavigator\",\"actions\":\"\",\"id\":2},{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"PlanManager\",\"output\":\"PlanManager\",\"actions\":\"\",\"id\":3},{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"Knowledgebase\",\"output\":\"Knowledgebase\",\"actions\":\"\",\"id\":4},{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"MessageNotifyUser\",\"output\":\"MessageNotifyUser\",\"actions\":\"\",\"id\":5},{\"variable\":\"$flow.state.next\",\"operation\":\"Is\",\"value\":\"MessageAskUser\",\"output\":\"MessageAskUser\",\"actions\":\"\",\"id\":6}]",
           "selectedConditionFunctionTab_seqCondition_0": "conditionUI"
         },
         "outputAnchors": [
@@ -988,9 +988,9 @@
                 "isAnchor": true
               },
               {
-                "id": "seqCondition_0-output-filewizard-Condition",
-                "name": "filewizard",
-                "label": "FileWizard",
+                "id": "seqCondition_0-output-filesystemmanager-Condition",
+                "name": "filesystemmanager",
+                "label": "FileSystemManager",
                 "type": "Condition",
                 "isAnchor": true
               },
@@ -1038,10 +1038,10 @@
         "selected": false
       },
       "width": 300,
-      "height": 780,
+      "height": 779,
       "positionAbsolute": {
         "x": 1364.3569235259827,
-        "y": 773.9789288776261
+        "y": 775.1665673275612
       },
       "selected": false,
       "dragging": false
@@ -1344,7 +1344,7 @@
         "selected": false
       },
       "width": 300,
-      "height": 861,
+      "height": 860,
       "selected": false,
       "positionAbsolute": {
         "x": 2054.8870978392815,
@@ -1651,7 +1651,7 @@
         "selected": false
       },
       "width": 300,
-      "height": 861,
+      "height": 860,
       "selected": false,
       "positionAbsolute": {
         "x": 2059.1378545976927,
@@ -1708,7 +1708,7 @@
         "selected": false
       },
       "width": 300,
-      "height": 243,
+      "height": 242,
       "selected": false,
       "positionAbsolute": {
         "x": 2370.9307912602585,
@@ -1754,7 +1754,7 @@
         ],
         "inputAnchors": [],
         "inputs": {
-          "mcpServerConfig": "{\n  \"command\": \"bun\",\n  \"args\": [\".runtime/index.ts\"]\n}",
+          "mcpServerConfig": "{\n  \"command\": \"bunx\",\n  \"args\": [\n    \"-y\",\n    \"supergateway\",\n    \"--sse\",\n    \"http://localhost:8002/sse\"\n  ]\n}",
           "mcpActions": "[\"browser_click\",\"browser_console_exec\",\"browser_console_view\",\"browser_input\",\"browser_move_mouse\",\"browser_navigate\",\"browser_press_key\",\"browser_scroll_down\",\"browser_scroll_up\",\"browser_select_option\",\"browser_view\"]"
         },
         "outputAnchors": [
@@ -1781,7 +1781,7 @@
     {
       "id": "braveSearchAPI_0",
       "position": {
-        "x": 1363.4934731798487,
+        "x": 1365.1095997195323,
         "y": 2395.494574599078
       },
       "type": "customNode",
@@ -1828,7 +1828,7 @@
       "height": 276,
       "selected": false,
       "positionAbsolute": {
-        "x": 1363.4934731798487,
+        "x": 1365.1095997195323,
         "y": 2395.494574599078
       },
       "dragging": false
@@ -1871,7 +1871,7 @@
         ],
         "inputAnchors": [],
         "inputs": {
-          "mcpServerConfig": "{\n  \"command\": \"bun\",\n  \"args\": [\".runtime/index.ts\"]\n}",
+          "mcpServerConfig": "{\n  \"command\": \"bunx\",\n  \"args\": [\n    \"-y\",\n    \"supergateway\",\n    \"--sse\",\n    \"http://localhost:8002/sse\"\n  ]\n}",
           "mcpActions": "[\"file_find_by_name\",\"file_find_in_content\",\"file_read\",\"file_str_replace\",\"file_write\",\"file_read_image\"]"
         },
         "outputAnchors": [
@@ -1933,7 +1933,7 @@
         ],
         "inputAnchors": [],
         "inputs": {
-          "mcpServerConfig": "{\n  \"command\": \"bun\",\n  \"args\": [\".runtime/index.ts\"]\n}",
+          "mcpServerConfig": "{\n  \"command\": \"bunx\",\n  \"args\": [\n    \"-y\",\n    \"supergateway\",\n    \"--sse\",\n    \"http://localhost:8002/sse\"\n  ]\n}",
           "mcpActions": "[\"shell_exec\",\"shell_kill_process\",\"shell_view\",\"shell_wait\",\"shell_write_to_process\"]"
         },
         "outputAnchors": [
@@ -1993,7 +1993,7 @@
         "selected": false
       },
       "width": 300,
-      "height": 144,
+      "height": 143,
       "selected": false,
       "positionAbsolute": {
         "x": 2057.2134615601058,
@@ -2282,8 +2282,8 @@
     {
       "id": "unstructuredFileLoader_0",
       "position": {
-        "x": 256.55301165162354,
-        "y": 1244.7361901332802
+        "x": 379.2136568666564,
+        "y": 1247.3058273408035
       },
       "type": "customNode",
       "data": {
@@ -2750,19 +2750,19 @@
         "selected": false
       },
       "width": 300,
-      "height": 566,
+      "height": 565,
       "selected": false,
       "positionAbsolute": {
-        "x": 256.55301165162354,
-        "y": 1244.7361901332802
+        "x": 379.2136568666564,
+        "y": 1247.3058273408035
       },
       "dragging": false
     },
     {
       "id": "setVariable_0",
       "position": {
-        "x": 559.8626202119283,
-        "y": 1243.9533189429326
+        "x": 691.68612862468,
+        "y": 1246.522956150456
       },
       "type": "customNode",
       "data": {
@@ -2839,19 +2839,19 @@
         "selected": false
       },
       "width": 300,
-      "height": 409,
+      "height": 408,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 559.8626202119283,
-        "y": 1243.9533189429326
+        "x": 691.68612862468,
+        "y": 1246.522956150456
       }
     },
     {
       "id": "stickyNote_0",
       "position": {
-        "x": 557.9706924593037,
-        "y": 1652.9744707456043
+        "x": 693.8049581117547,
+        "y": 1658.3284651070535
       },
       "type": "stickyNote",
       "data": {
@@ -2881,7 +2881,7 @@
         ],
         "inputAnchors": [],
         "inputs": {
-          "note": "Upload your files here\n\nRun: \n```docker run -p 8000:8000 -d --rm --name unstructured-api downloads.unstructured.io/unstructured-io/unstructured-api:latest```"
+          "note": "Upload your files here\n\nRun: \n```docker run -p 8000:8000 -d --rm --name unstructured-api downloads.unstructured.io/unstructured-io/unstructured-api:latest```\n\n\nWe directly bypass flowise's document uploader, as Unstructured is objectively better and simpler with inbuilt semantic splitting, this stuff should be popular like hot cakes i dunno why its not."
         },
         "outputAnchors": [
           {
@@ -2896,12 +2896,12 @@
         "selected": false
       },
       "width": 300,
-      "height": 163,
+      "height": 304,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 557.9706924593037,
-        "y": 1652.9744707456043
+        "x": 693.8049581117547,
+        "y": 1658.3284651070535
       }
     },
     {
@@ -3306,7 +3306,7 @@
         "selected": false
       },
       "width": 300,
-      "height": 630,
+      "height": 629,
       "selected": false,
       "positionAbsolute": {
         "x": 2695.39337547825,
@@ -3917,7 +3917,7 @@
         "selected": false
       },
       "width": 300,
-      "height": 243,
+      "height": 242,
       "selected": false,
       "positionAbsolute": {
         "x": 3333.45721213525,
@@ -3987,7 +3987,7 @@
         "selected": false
       },
       "width": 300,
-      "height": 313,
+      "height": 312,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
@@ -3998,8 +3998,8 @@
     {
       "id": "chatAnthropic_0",
       "position": {
-        "x": 257.0590098788915,
-        "y": 41.19526220933017
+        "x": 379.7196550939243,
+        "y": 43.764899416853495
       },
       "type": "customNode",
       "data": {
@@ -4144,11 +4144,11 @@
         "selected": false
       },
       "width": 300,
-      "height": 671,
+      "height": 670,
       "selected": false,
       "positionAbsolute": {
-        "x": 257.0590098788915,
-        "y": 41.19526220933017
+        "x": 379.7196550939243,
+        "y": 43.764899416853495
       },
       "dragging": false
     },
@@ -4353,7 +4353,7 @@
         "selected": false
       },
       "width": 300,
-      "height": 530,
+      "height": 529,
       "selected": false,
       "positionAbsolute": {
         "x": 2377.037913920818,
@@ -4687,7 +4687,7 @@
         "selected": false
       },
       "width": 300,
-      "height": 243,
+      "height": 242,
       "selected": false,
       "positionAbsolute": {
         "x": 2378.8216854961815,
@@ -4744,7 +4744,7 @@
         "selected": false
       },
       "width": 300,
-      "height": 243,
+      "height": 242,
       "selected": false,
       "positionAbsolute": {
         "x": 2374.1493126711016,
@@ -4801,7 +4801,7 @@
         "selected": false
       },
       "width": 300,
-      "height": 243,
+      "height": 242,
       "selected": false,
       "positionAbsolute": {
         "x": 2373.7895631033407,
@@ -4858,7 +4858,7 @@
         "selected": false
       },
       "width": 300,
-      "height": 243,
+      "height": 242,
       "selected": false,
       "positionAbsolute": {
         "x": 3334.2343158672393,
@@ -4946,12 +4946,12 @@
           }
         ],
         "inputs": {
-          "functionInputVariables": "",
+          "functionInputVariables": "{\"instruction\":\"$flow.state.instruction\"}",
           "sequentialNode": [
             "{{seqCondition_0.data.instance}}"
           ],
           "functionName": "MessageNotifyUser",
-          "javascriptFunction": "return String($flow.instruction)",
+          "javascriptFunction": "return String($instruction)",
           "returnValueAs": "aiMessage"
         },
         "outputAnchors": [
@@ -4967,7 +4967,7 @@
         "selected": false
       },
       "width": 300,
-      "height": 796,
+      "height": 795,
       "selected": false,
       "positionAbsolute": {
         "x": 2057.82369899717,
@@ -5024,7 +5024,7 @@
         "selected": false
       },
       "width": 300,
-      "height": 243,
+      "height": 242,
       "selected": false,
       "positionAbsolute": {
         "x": 2371.974825600182,
@@ -5068,7 +5068,7 @@
         "selected": false
       },
       "width": 300,
-      "height": 144,
+      "height": 143,
       "selected": false,
       "positionAbsolute": {
         "x": 2373.1990743114743,
@@ -5156,12 +5156,12 @@
           }
         ],
         "inputs": {
-          "functionInputVariables": "",
+          "functionInputVariables": "{\"instruction\":\"$flow.state.instruction\"}",
           "sequentialNode": [
             "{{seqCondition_0.data.instance}}"
           ],
           "functionName": "MessageAskUser",
-          "javascriptFunction": "return String($flow.instruction)",
+          "javascriptFunction": "return String($instruction)",
           "returnValueAs": "aiMessage"
         },
         "outputAnchors": [
@@ -5177,13 +5177,375 @@
         "selected": false
       },
       "width": 300,
-      "height": 796,
+      "height": 795,
       "selected": false,
       "positionAbsolute": {
         "x": 2055.738463485846,
         "y": 1395.0996172862872
       },
       "dragging": false
+    },
+    {
+      "id": "stickyNote_1",
+      "position": {
+        "x": 66.97275429770514,
+        "y": 983.7498255438102
+      },
+      "type": "stickyNote",
+      "data": {
+        "id": "stickyNote_1",
+        "label": "Sticky Note",
+        "version": 2,
+        "name": "stickyNote",
+        "type": "StickyNote",
+        "baseClasses": [
+          "StickyNote"
+        ],
+        "tags": [
+          "Utilities"
+        ],
+        "category": "Utilities",
+        "description": "Add a sticky note",
+        "inputParams": [
+          {
+            "label": "",
+            "name": "note",
+            "type": "string",
+            "rows": 1,
+            "placeholder": "Type something here",
+            "optional": true,
+            "id": "stickyNote_1-input-note-string"
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "note": "Not adding long term chat memory because its not worth the effort, but feel free to add it.\n\nhttps://langchain-ai.github.io/langgraph/concepts/memory/#long-term-memory"
+        },
+        "outputAnchors": [
+          {
+            "id": "stickyNote_1-output-stickyNote-StickyNote",
+            "name": "stickyNote",
+            "label": "StickyNote",
+            "description": "Add a sticky note",
+            "type": "StickyNote"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 163,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 66.97275429770514,
+        "y": 983.7498255438102
+      }
+    },
+    {
+      "id": "plainText_0",
+      "position": {
+        "x": 379.0076783372229,
+        "y": 1985.1334533504598
+      },
+      "type": "customNode",
+      "data": {
+        "id": "plainText_0",
+        "label": "Plain Text",
+        "version": 2,
+        "name": "plainText",
+        "type": "Document",
+        "baseClasses": [
+          "Document"
+        ],
+        "category": "Document Loaders",
+        "description": "Load data from plain text",
+        "inputParams": [
+          {
+            "label": "Text",
+            "name": "text",
+            "type": "string",
+            "rows": 4,
+            "placeholder": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
+            "id": "plainText_0-input-text-string"
+          },
+          {
+            "label": "Additional Metadata",
+            "name": "metadata",
+            "type": "json",
+            "description": "Additional metadata to be added to the extracted documents",
+            "optional": true,
+            "additionalParams": true,
+            "id": "plainText_0-input-metadata-json"
+          },
+          {
+            "label": "Omit Metadata Keys",
+            "name": "omitMetadataKeys",
+            "type": "string",
+            "rows": 4,
+            "description": "Each document loader comes with a default set of metadata keys that are extracted from the document. You can use this field to omit some of the default metadata keys. The value should be a list of keys, seperated by comma. Use * to omit all metadata keys execept the ones you specify in the Additional Metadata field",
+            "placeholder": "key1, key2, key3.nestedKey1",
+            "optional": true,
+            "additionalParams": true,
+            "id": "plainText_0-input-omitMetadataKeys-string"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Text Splitter",
+            "name": "textSplitter",
+            "type": "TextSplitter",
+            "optional": true,
+            "id": "plainText_0-input-textSplitter-TextSplitter"
+          }
+        ],
+        "inputs": {
+          "text": "true",
+          "textSplitter": "",
+          "metadata": "",
+          "omitMetadataKeys": ""
+        },
+        "outputAnchors": [
+          {
+            "name": "output",
+            "label": "Output",
+            "type": "options",
+            "description": "Array of document objects containing metadata and pageContent",
+            "options": [
+              {
+                "id": "plainText_0-output-document-Document|json",
+                "name": "document",
+                "label": "Document",
+                "description": "Array of document objects containing metadata and pageContent",
+                "type": "Document | json"
+              },
+              {
+                "id": "plainText_0-output-text-string|json",
+                "name": "text",
+                "label": "Text",
+                "description": "Concatenated string from pageContent of documents",
+                "type": "string | json"
+              }
+            ],
+            "default": "document"
+          }
+        ],
+        "outputs": {
+          "output": "text"
+        },
+        "selected": false
+      },
+      "width": 300,
+      "height": 487,
+      "positionAbsolute": {
+        "x": 379.0076783372229,
+        "y": 1985.1334533504598
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "setVariable_1",
+      "position": {
+        "x": 693.8272478963587,
+        "y": 1986.4217104601396
+      },
+      "type": "customNode",
+      "data": {
+        "id": "setVariable_1",
+        "label": "Set Variable",
+        "version": 2.1,
+        "name": "setVariable",
+        "type": "SetVariable",
+        "baseClasses": [
+          "SetVariable",
+          "Utilities"
+        ],
+        "tags": [
+          "Utilities"
+        ],
+        "category": "Utilities",
+        "description": "Set variable which can be retrieved at a later stage. Variable is only available during runtime.",
+        "inputParams": [
+          {
+            "label": "Variable Name",
+            "name": "variableName",
+            "type": "string",
+            "placeholder": "var1",
+            "id": "setVariable_1-input-variableName-string"
+          },
+          {
+            "label": "Show Output",
+            "name": "showOutput",
+            "description": "Show the output result in the Prediction API response",
+            "type": "boolean",
+            "optional": true,
+            "additionalParams": true,
+            "id": "setVariable_1-input-showOutput-boolean"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Input",
+            "name": "input",
+            "type": "string | number | boolean | json | array",
+            "optional": true,
+            "list": true,
+            "id": "setVariable_1-input-input-string | number | boolean | json | array"
+          }
+        ],
+        "inputs": {
+          "input": [
+            "{{plainText_0.data.instance}}"
+          ],
+          "variableName": "is_nextjs_runtime_available",
+          "showOutput": ""
+        },
+        "outputAnchors": [
+          {
+            "name": "output",
+            "label": "Output",
+            "type": "options",
+            "description": "",
+            "options": [
+              {
+                "id": "setVariable_1-output-output-string|number|boolean|json|array",
+                "name": "output",
+                "label": "Output",
+                "description": "",
+                "type": "string | number | boolean | json | array"
+              }
+            ],
+            "default": "output"
+          }
+        ],
+        "outputs": {
+          "output": "output"
+        },
+        "selected": false
+      },
+      "width": 300,
+      "height": 408,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 693.8272478963587,
+        "y": 1986.4217104601396
+      }
+    },
+    {
+      "id": "stickyNote_2",
+      "position": {
+        "x": 378.14658030429007,
+        "y": 1909.8763514699885
+      },
+      "type": "stickyNote",
+      "data": {
+        "id": "stickyNote_2",
+        "label": "Sticky Note",
+        "version": 2,
+        "name": "stickyNote",
+        "type": "StickyNote",
+        "baseClasses": [
+          "StickyNote"
+        ],
+        "tags": [
+          "Utilities"
+        ],
+        "category": "Utilities",
+        "description": "Add a sticky note",
+        "inputParams": [
+          {
+            "label": "",
+            "name": "note",
+            "type": "string",
+            "rows": 1,
+            "placeholder": "Type something here",
+            "optional": true,
+            "id": "stickyNote_2-input-note-string"
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "note": "Enable or disable nextjs runtime. Once enabled cannot be disabled"
+        },
+        "outputAnchors": [
+          {
+            "id": "stickyNote_2-output-stickyNote-StickyNote",
+            "name": "stickyNote",
+            "label": "StickyNote",
+            "description": "Add a sticky note",
+            "type": "StickyNote"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 62,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 378.14658030429007,
+        "y": 1909.8763514699885
+      }
+    },
+    {
+      "id": "stickyNote_3",
+      "position": {
+        "x": 1030.2376937088827,
+        "y": -132.8837439477482
+      },
+      "type": "stickyNote",
+      "data": {
+        "id": "stickyNote_3",
+        "label": "Sticky Note",
+        "version": 2,
+        "name": "stickyNote",
+        "type": "StickyNote",
+        "baseClasses": [
+          "StickyNote"
+        ],
+        "tags": [
+          "Utilities"
+        ],
+        "category": "Utilities",
+        "description": "Add a sticky note",
+        "inputParams": [
+          {
+            "label": "",
+            "name": "note",
+            "type": "string",
+            "rows": 1,
+            "placeholder": "Type something here",
+            "optional": true,
+            "id": "stickyNote_3-input-note-string"
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "note": "Add a document store here, to add multiple, duplicate from retriever tool. 1 store per tool"
+        },
+        "outputAnchors": [
+          {
+            "id": "stickyNote_3-output-stickyNote-StickyNote",
+            "name": "stickyNote",
+            "label": "StickyNote",
+            "description": "Add a sticky note",
+            "type": "StickyNote"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 82,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 1030.2376937088827,
+        "y": -132.8837439477482
+      }
     }
   ],
   "edges": [
@@ -5193,7 +5555,8 @@
       "target": "seqStart_0",
       "targetHandle": "seqStart_0-input-agentMemory-BaseCheckpointSaver",
       "type": "buttonedge",
-      "id": "sqliteAgentMemory_0-sqliteAgentMemory_0-output-sqliteAgentMemory-SQLiteAgentMemory|BaseCheckpointSaver-seqStart_0-seqStart_0-input-agentMemory-BaseCheckpointSaver"
+      "id": "sqliteAgentMemory_0-sqliteAgentMemory_0-output-sqliteAgentMemory-SQLiteAgentMemory|BaseCheckpointSaver-seqStart_0-seqStart_0-input-agentMemory-BaseCheckpointSaver",
+      "selected": false
     },
     {
       "source": "seqState_0",
@@ -5201,15 +5564,8 @@
       "target": "seqStart_0",
       "targetHandle": "seqStart_0-input-state-State",
       "type": "buttonedge",
-      "id": "seqState_0-seqState_0-output-seqState-State-seqStart_0-seqStart_0-input-state-State"
-    },
-    {
-      "source": "seqStart_0",
-      "sourceHandle": "seqStart_0-output-seqStart-Start",
-      "target": "seqLLMNode_0",
-      "targetHandle": "seqLLMNode_0-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
-      "type": "buttonedge",
-      "id": "seqStart_0-seqStart_0-output-seqStart-Start-seqLLMNode_0-seqLLMNode_0-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+      "id": "seqState_0-seqState_0-output-seqState-State-seqStart_0-seqStart_0-input-state-State",
+      "selected": false
     },
     {
       "source": "seqLLMNode_0",
@@ -5217,7 +5573,8 @@
       "target": "seqCondition_0",
       "targetHandle": "seqCondition_0-input-sequentialNode-Start | Agent | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
       "type": "buttonedge",
-      "id": "seqLLMNode_0-seqLLMNode_0-output-seqLLMNode-LLMNode-seqCondition_0-seqCondition_0-input-sequentialNode-Start | Agent | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+      "id": "seqLLMNode_0-seqLLMNode_0-output-seqLLMNode-LLMNode-seqCondition_0-seqCondition_0-input-sequentialNode-Start | Agent | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "selected": false
     },
     {
       "source": "braveSearchAPI_0",
@@ -5266,15 +5623,6 @@
     },
     {
       "source": "seqCondition_0",
-      "sourceHandle": "seqCondition_0-output-filewizard-Condition",
-      "target": "seqAgent_0",
-      "targetHandle": "seqAgent_0-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
-      "type": "buttonedge",
-      "id": "seqCondition_0-seqCondition_0-output-filewizard-Condition-seqAgent_0-seqAgent_0-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
-      "selected": false
-    },
-    {
-      "source": "seqCondition_0",
       "sourceHandle": "seqCondition_0-output-commandrunner-Condition",
       "target": "seqAgent_1",
       "targetHandle": "seqAgent_1-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
@@ -5306,7 +5654,8 @@
       "target": "setVariable_0",
       "targetHandle": "setVariable_0-input-input-string | number | boolean | json | array",
       "type": "buttonedge",
-      "id": "unstructuredFileLoader_0-unstructuredFileLoader_0-output-document-Document|json-setVariable_0-setVariable_0-input-input-string | number | boolean | json | array"
+      "id": "unstructuredFileLoader_0-unstructuredFileLoader_0-output-document-Document|json-setVariable_0-setVariable_0-input-input-string | number | boolean | json | array",
+      "selected": false
     },
     {
       "source": "seqAgent_1",
@@ -5349,7 +5698,8 @@
       "target": "retrieverTool_0",
       "targetHandle": "retrieverTool_0-input-retriever-BaseRetriever",
       "type": "buttonedge",
-      "id": "documentStoreVS_0-documentStoreVS_0-output-retriever-BaseRetriever-retrieverTool_0-retrieverTool_0-input-retriever-BaseRetriever"
+      "id": "documentStoreVS_0-documentStoreVS_0-output-retriever-BaseRetriever-retrieverTool_0-retrieverTool_0-input-retriever-BaseRetriever",
+      "selected": false
     },
     {
       "source": "seqToolNode_0",
@@ -5458,7 +5808,33 @@
       "target": "seqStart_0",
       "targetHandle": "seqStart_0-input-model-BaseChatModel",
       "type": "buttonedge",
-      "id": "chatAnthropic_0-chatAnthropic_0-output-chatAnthropic-ChatAnthropic|ChatAnthropicMessages|BaseChatModel|BaseLanguageModel|Runnable-seqStart_0-seqStart_0-input-model-BaseChatModel"
+      "id": "chatAnthropic_0-chatAnthropic_0-output-chatAnthropic-ChatAnthropic|ChatAnthropicMessages|BaseChatModel|BaseLanguageModel|Runnable-seqStart_0-seqStart_0-input-model-BaseChatModel",
+      "selected": false
+    },
+    {
+      "source": "seqStart_0",
+      "sourceHandle": "seqStart_0-output-seqStart-Start",
+      "target": "seqLLMNode_0",
+      "targetHandle": "seqLLMNode_0-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "type": "buttonedge",
+      "id": "seqStart_0-seqStart_0-output-seqStart-Start-seqLLMNode_0-seqLLMNode_0-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "selected": false
+    },
+    {
+      "source": "plainText_0",
+      "sourceHandle": "plainText_0-output-document-Document|json",
+      "target": "setVariable_1",
+      "targetHandle": "setVariable_1-input-input-string | number | boolean | json | array",
+      "type": "buttonedge",
+      "id": "plainText_0-plainText_0-output-document-Document|json-setVariable_1-setVariable_1-input-input-string | number | boolean | json | array"
+    },
+    {
+      "source": "seqCondition_0",
+      "sourceHandle": "seqCondition_0-output-filesystemmanager-Condition",
+      "target": "seqAgent_0",
+      "targetHandle": "seqAgent_0-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "type": "buttonedge",
+      "id": "seqCondition_0-seqCondition_0-output-filesystemmanager-Condition-seqAgent_0-seqAgent_0-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
     }
   ]
 }

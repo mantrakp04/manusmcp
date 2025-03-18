@@ -30,6 +30,11 @@ export interface FileOperationResult {
         end: number;
     }>;
     files?: string[];
+    lintResult?: {
+        success: boolean;
+        output?: string;
+        returnCode?: number;
+    };
 }
 
 export interface ShellOperationResult {
@@ -47,6 +52,8 @@ export interface ShellOperationResult {
     partialOutput?: string;
     completed?: boolean;
     message?: string;
+    lintOutput?: string;
+    lintReturnCode?: number;
 }
 
 export interface BrowserOperationResult {

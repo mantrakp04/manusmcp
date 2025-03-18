@@ -7,8 +7,8 @@ import { ShellService } from "./src/services/shellService";
 import { BrowserService } from "./src/services/browserService";
 
 // Initialize services
-const fileService = new FileService();
 const shellService = new ShellService();
+const fileService = new FileService(shellService);
 const browserService = new BrowserService();
 
 // Create an MCP server
@@ -164,6 +164,17 @@ server.tool(
   },
   async ({ id }) => {
     const result = await shellService.killProcess(id);
+    return { content: [{ type: "text", text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  "shell_attach_nextjs_runtime",
+  {
+    useLinter: z.boolean().optional()
+  },
+  async ({ useLinter }) => {
+    const result = await shellService.attachNextJSRuntime(useLinter ?? false);
     return { content: [{ type: "text", text: JSON.stringify(result) }] };
   }
 );
