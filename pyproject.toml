@@ -1,0 +1,17 @@
+[project]
+name = "manusmcp"
+version = "0.0.2"
+description = "A ManusMCP project"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [ "mcp>=1.4.1",]
+[[project.authors]]
+name = "BarrelOfLube"
+email = "mantrakp04@gmail.com"
+
+[build-system]
+requires = [ "hatchling",]
+build-backend = "hatchling.build"
+
+[project.scripts]
+manusmcp = "manusmcp:main"
