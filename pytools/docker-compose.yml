@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  # manusmcp:
+  #   build: .
+  #   ports:
+  #     - "8000:8000"
+  #   restart: unless-stopped
+
+  unstructured:
+    image: downloads.unstructured.io/unstructured-io/unstructured-api:latest
+    ports:
+      - "8080:8000"
+    restart: unless-stopped
+
+# docker-compose up -d

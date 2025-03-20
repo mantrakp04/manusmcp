@@ -1,0 +1,34 @@
+[project]
+name = "manusmcp"
+version = "0.0.2"
+description = "A ManusMCP project"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+ "fastapi>=0.115.11",
+ "gradio-client>=1.8.0",
+ "langchain-community>=0.3.20",
+ "langgraph>=0.3.16",
+ "litellm[proxy]>=1.63.11",
+ "mcp",
+ "openai>=1.66.3",
+ "playwright>=1.51.0",
+]
+[[project.authors]]
+name = "BarrelOfLube"
+email = "mantrakp04@gmail.com"
+
+[build-system]
+requires = [ "hatchling",]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "jupyter>=1.1.1",
+]
+
+[tool.uv.sources]
+mcp = { git = "https://github.com/modelcontextprotocol/python-sdk" }
+
+[project.scripts]
+manusmcp = "manusmcp:main"
