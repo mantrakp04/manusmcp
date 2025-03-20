@@ -1,0 +1,53 @@
+
+# Create FastAPI application with metadata
+app = FastAPI(
+    title="ManusMCP",
+    description="A Model Context Protocol server for Manus",
+    version="0.0.2",
+)
+app.mount("/", mcp.sse_app())
+
+@app.post("/reset")
+async def reset():
+    """
+    Reset the MCP server
+    """
+    os.remove(config.base_dir)
+    os.remove(config.base_next_dir)
+    return True
+
+@app.get("/attach_next_js_runtime")
+async def attach_next_js_runtime():
+    """
+    Attach the Next.js runtime to the MCP server
+    """
+    # Create a new shell session with ID "nextjs-runtime" if it doesn't exist
+    session_id = "nextjs-runtime"
+    if session_id not in sessions:
+        sessions[session_id] = ShellSession()
+    
+    os.makedirs(config.base_next_dir, exist_ok=True)
+    subprocess.run(["bunx", "create-next-app", "-e", "https://github.com/shadcn/next-template", config.base_next_dir])
+    
+    return {
+        "message": f"NextJS runtime attached at dir: `{config.base_next_dir}` It comes pre-configured with shadcn/ui and framer-motion & uses bun as the package manager.\n" + \
+        "## General Instructions\n" + \
+        "- Always up-to-date with the latest technologies and best practices.\n" + \
+        "- Default to Next.js App Router" + \
+        "- Use the app/artifacts route to present structured, formatted content in a more visually appealing and organized way.\n" + \
+        "   Artifacts are particularly useful for:\n" + \
+        "   - Longer creative writing (stories, scripts, essays, etc.)\n" + \
+        "   - Analytical content like reviews or critiques\n" + \
+        "   - Custom code solutions to specific problems\n" + \
+        "   - Content you might want to use outside our conversation\n" + \
+        "   - Structured documents with multiple sections\n" + \
+        "   - Visualizations of data or concepts\n",
+        "session_id": session_id,
+    }
+
+def main():
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+
+if __name__ == "__main__":
+    main()

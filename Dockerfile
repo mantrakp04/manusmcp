@@ -11,11 +11,6 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     wget \
-    libmagic-dev \
-    poppler-utils \
-    tesseract-ocr \
-    libreoffice \
-    pandoc \
     && rm -rf /var/lib/apt/lists/* && \
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash && \
     . $NVM_DIR/nvm.sh && \
@@ -26,24 +21,14 @@ RUN apt-get update && apt-get install -y \
     npm install -y -g bun
 
 WORKDIR /app/.runtime
-RUN git clone https://github.com/Unstructured-IO/unstructured-api.git && \
-    cd unstructured-api && \
-    python3 -m venv .venv && \
-    bash -c ". .venv/bin/activate && pip install --upgrade pip && make install" && \
-    cd ..
-
-WORKDIR /app/.runtime
 COPY . .
 
 RUN . $NVM_DIR/nvm.sh && uv sync && bunx playwright install chrome --with-deps
 
 EXPOSE 8000
-EXPOSE 4000
-EXPOSE 3000
-EXPOSE 8080
 
 WORKDIR /app
-CMD bash .runtime/start.sh
+CMD uv run --project ./.runtime manusmcp
 
 # docker build -t manusmcp .
-# docker run -p 8000:8000 -p 4000:4000 -p 8080:8080 --env-file .env manusmcp
+# docker run -p 8000:8000 manusmcp
