@@ -368,7 +368,7 @@
         ],
         "inputs": {
           "llmNodeName": "planner",
-          "systemMessagePrompt": "For the given objective, come up with a simple step by step plan.\n\nThis plan should involve individual tasks, that if executed correctly will yield the correct answer. Do not add any superfluous steps.\n\nThe result of the final step should be the final answer. Make sure that each step has all the information needed - do not skip steps.\n\n{objective}",
+          "systemMessagePrompt": "For the given objective, come up with a simple step by step plan.\n\nThis plan should involve individual tasks, that if executed correctly will yield the correct answer. Do not add any superfluous steps.\n\nThe result of the final step should be the final answer. Make sure that each step has all the information needed - do not skip steps.",
           "messageHistory": "",
           "conversationHistorySelection": "user_question",
           "humanMessagePrompt": "",
@@ -408,8 +408,8 @@
     {
       "id": "seqState_0",
       "position": {
-        "x": -516.05863088425,
-        "y": 408.69669472231084
+        "x": -129.22830335980427,
+        "y": 522.8815504373581
       },
       "type": "customNode",
       "data": {
@@ -503,8 +503,8 @@
       "height": 253,
       "selected": false,
       "positionAbsolute": {
-        "x": -516.05863088425,
-        "y": 408.69669472231084
+        "x": -129.22830335980427,
+        "y": 522.8815504373581
       },
       "dragging": false
     },
@@ -926,7 +926,7 @@
           }
         ],
         "inputs": {
-          "conditionName": "Check action",
+          "conditionName": "check_action",
           "sequentialNode": [
             "{{seqLLMNode_1.data.instance}}",
             "{{seqLLMNode_1.data.instance}}"
@@ -1368,8 +1368,8 @@
     {
       "id": "stickyNote_0",
       "position": {
-        "x": -513.158859797605,
-        "y": -28.123540344301205
+        "x": -451.4058255843652,
+        "y": 519.4977064523539
       },
       "type": "stickyNote",
       "data": {
@@ -1417,16 +1417,16 @@
       "height": 404,
       "selected": false,
       "positionAbsolute": {
-        "x": -513.158859797605,
-        "y": -28.123540344301205
+        "x": -451.4058255843652,
+        "y": 519.4977064523539
       },
       "dragging": false
     },
     {
       "id": "stickyNote_1",
       "position": {
-        "x": 651.5991573765737,
-        "y": 651.3893848046831
+        "x": 659.755218499077,
+        "y": 625.756049848244
       },
       "type": "stickyNote",
       "data": {
@@ -1474,8 +1474,8 @@
       "height": 163,
       "selected": false,
       "positionAbsolute": {
-        "x": 651.5991573765737,
-        "y": 651.3893848046831
+        "x": 659.755218499077,
+        "y": 625.756049848244
       },
       "dragging": false
     },
@@ -1539,8 +1539,8 @@
     {
       "id": "stickyNote_4",
       "position": {
-        "x": 2855.9485887860174,
-        "y": 56.22725864526228
+        "x": 2880.4167721535277,
+        "y": 80.69544201277242
       },
       "type": "stickyNote",
       "data": {
@@ -1588,8 +1588,8 @@
       "height": 42,
       "selected": false,
       "positionAbsolute": {
-        "x": 2855.9485887860174,
-        "y": 56.22725864526228
+        "x": 2880.4167721535277,
+        "y": 80.69544201277242
       },
       "dragging": false
     },
@@ -1653,8 +1653,8 @@
     {
       "id": "chatAnthropic_0",
       "position": {
-        "x": -132.08135114499999,
-        "y": 138.16871718741638
+        "x": -133.24650273392905,
+        "y": -437.416167743536
       },
       "type": "customNode",
       "data": {
@@ -1776,15 +1776,15 @@
         ],
         "inputs": {
           "cache": "",
-          "modelName": "claude-3-haiku",
-          "temperature": 0.9,
+          "modelName": "claude-3-5-sonnet-latest",
+          "temperature": "0.3",
           "streaming": true,
           "maxTokensToSample": "",
           "topP": "",
           "topK": "",
           "extendedThinking": "",
           "budgetTokens": 1024,
-          "allowImageUploads": ""
+          "allowImageUploads": true
         },
         "outputAnchors": [
           {
@@ -1802,16 +1802,16 @@
       "height": 670,
       "selected": false,
       "positionAbsolute": {
-        "x": -132.08135114499999,
-        "y": 138.16871718741638
+        "x": -133.24650273392905,
+        "y": -437.416167743536
       },
       "dragging": false
     },
     {
       "id": "sqliteAgentMemory_0",
       "position": {
-        "x": -135.4739220096721,
-        "y": 815.6782228737367
+        "x": -137.74340552541418,
+        "y": 246.73641005479288
       },
       "type": "customNode",
       "data": {
@@ -1856,8 +1856,8 @@
       "height": 253,
       "selected": false,
       "positionAbsolute": {
-        "x": -135.4739220096721,
-        "y": 815.6782228737367
+        "x": -137.74340552541418,
+        "y": 246.73641005479288
       },
       "dragging": false
     },
@@ -1945,7 +1945,7 @@
           "sequentialNode": [
             "{{seqExecuteFlow_0.data.instance}}"
           ],
-          "functionName": "update plan state",
+          "functionName": "udate_plan_state",
           "javascriptFunction": "// Get the first task\nconst task = $plan[0];\nconst outputContent = $output;\n\n// Now, we have processed the first task, remove it from array\nconst remainingPlans = $plan.slice(1);\n\nreturn {\n  pastSteps: [[task, outputContent]],\n  plan: remainingPlans,\n};",
           "returnValueAs": "stateObj"
         },
@@ -2207,7 +2207,7 @@
           "sequentialNode": [
             "{{seqLLMNode_0.data.instance}}"
           ],
-          "functionName": "step",
+          "functionName": "step_input",
           "javascriptFunction": "return String($step)",
           "returnValueAs": "humanMessage"
         },
@@ -2336,6 +2336,14 @@
       "targetHandle": "seqExecuteFlow_0-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
       "type": "buttonedge",
       "id": "seqCustomFunction_1-seqCustomFunction_1-output-seqCustomFunction-CustomFunction-seqExecuteFlow_0-seqExecuteFlow_0-input-sequentialNode-Start | Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
+    },
+    {
+      "source": "seqLLMNode_3",
+      "sourceHandle": "seqLLMNode_3-output-seqLLMNode-LLMNode",
+      "target": "seqEnd_1",
+      "targetHandle": "seqEnd_1-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow",
+      "type": "buttonedge",
+      "id": "seqLLMNode_3-seqLLMNode_3-output-seqLLMNode-LLMNode-seqEnd_1-seqEnd_1-input-sequentialNode-Agent | Condition | LLMNode | ToolNode | CustomFunction | ExecuteFlow"
     }
   ]
 }

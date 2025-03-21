@@ -5918,7 +5918,7 @@
         ],
         "inputs": {
           "cache": "",
-          "modelName": "claude-3-7-sonnet-latest",
+          "modelName": "claude-3-5-sonnet-latest",
           "temperature": "0.2",
           "streaming": true,
           "maxTokensToSample": "",
