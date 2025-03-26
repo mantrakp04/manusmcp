@@ -1,16 +1,18 @@
 import os
 import re
 import time
-import glob
 import base64
+import asyncio
 import subprocess
 import tempfile
 from typing import Optional, Dict, Any
 from pydantic import BaseModel, Field
 
-from gradio_client import Client
 from mcp.server.fastmcp import FastMCP
-from playwright.sync_api import sync_playwright
+from browser_use.browser.browser import Browser, BrowserConfig
+from browser_use.browser.context import BrowserContext, BrowserContextConfig
+from browser_use.agent.views import ActionResult
+from browser_use.dom.service import DomService
 
 from . import config
 
@@ -21,53 +23,35 @@ class ShellSession(BaseModel):
     output: str = Field(default="", description="Accumulated output from the shell session")
     process: Optional[Any] = Field(default=None, description="Subprocess process object")
 
-class BrowserInstance:
-    def __init__(self):
-        self.playwright = None
-        self.browser = None
-        self.context = None
-        self.page = None
-        
-    def ensure_browser(self):
-        if self.playwright is None:
-            self.playwright = sync_playwright().start()
-            self.browser = self.playwright.chromium.launch(headless=True)
-            self.context = self.browser.new_context(viewport={"width": 1280, "height": 800})
-            self.page = self.context.new_page()
-        elif self.page is None or self.browser is None:
-            if self.browser is None:
-                self.browser = self.playwright.chromium.launch(headless=True)
-            if self.context is None:
-                self.context = self.browser.new_context(viewport={"width": 1280, "height": 800})
-            if self.page is None:
-                self.page = self.context.new_page()
-    
-    def restart_browser(self):
-        self.close()
-        self.ensure_browser()
-    
-    def close(self):
-        if self.page:
-            self.page.close()
-            self.page = None
-        if self.context:
-            self.context.close()
-            self.context = None
-        if self.browser:
-            self.browser.close()
-            self.browser = None
-        if self.playwright:
-            self.playwright.stop()
-            self.playwright = None
+browser_config = BrowserConfig(
+    headless=True,
+    disable_security=True,
+)
+browser = Browser(config=browser_config)
+
+# Create a context config with useful settings
+context_config = BrowserContextConfig(
+    highlight_elements=True,
+    viewport_expansion=500,
+    wait_for_network_idle_page_load_time=1.0,
+    minimum_wait_page_load_time=0.5,
+)
+
+# Initialize browser context
+browser_context = None
+browser_context_lock = asyncio.Lock()
+
+async def get_browser_context():
+    """Get or create a browser context with locking to ensure thread safety"""
+    global browser_context
+    async with browser_context_lock:
+        if browser_context is None:
+            browser_context = await browser.new_context(context_config)
+        return browser_context
 
 # Session state
 sessions: Dict[str, ShellSession] = {}
 
-# Omni Parser Client
-client = Client(config.omni_parser_client_url, hf_token=config.hf_token)
-
-# Initialize browser instance
-browser_instance = BrowserInstance()
 
 # Tools
 @mcp.tool()
@@ -591,53 +575,66 @@ def browser_view() -> Dict[str, Any]:
         return {"error": f"Error taking screenshot: {str(e)}"}
 
 @mcp.tool()
-def browser_navigate(url: str = Field(description="Complete URL to visit. Must include protocol prefix.")) -> str:
+async def browser_navigate(url: str = Field(description="Complete URL to visit. Must include protocol prefix.")) -> str:
     """Navigate browser to specified URL. Use when accessing new pages is needed."""
-    
     try:
-        browser_instance.ensure_browser()
-        browser_instance.page.goto(url, wait_until="networkidle")
+        context = await get_browser_context()
+        await context.navigate_to(url)
         return f"Successfully navigated to {url}"
     except Exception as e:
         return f"Error navigating to {url}: {str(e)}"
 
 @mcp.tool()
-def browser_restart(url: str = Field(description="Complete URL to visit after restart. Must include protocol prefix.")) -> str:
+async def browser_restart(url: str = Field(description="Complete URL to visit after restart. Must include protocol prefix.")) -> str:
     """Restart browser and navigate to specified URL. Use when browser state needs to be reset."""
+    global browser_context
     
     try:
-        browser_instance.restart_browser()
-        browser_instance.page.goto(url, wait_until="networkidle")
+        # Close the existing context
+        if browser_context:
+            await browser_context.close()
+            browser_context = None
+        
+        # Get a new context
+        context = await get_browser_context()
+        
+        # Navigate to the URL
+        await context.navigate_to(url)
         return f"Browser restarted and navigated to {url}"
     except Exception as e:
         return f"Error restarting browser and navigating to {url}: {str(e)}"
 
 @mcp.tool()
-def browser_click(
+async def browser_click(
     index: Optional[int] = Field(default=None, description="(Optional) Index number of the element to click"),
     coordinate_x: Optional[float] = Field(default=None, description="(Optional) X coordinate of click position"),
     coordinate_y: Optional[float] = Field(default=None, description="(Optional) Y coordinate of click position")
 ) -> str:
     """Click on elements in the current browser page. Use when clicking page elements is needed."""
-    index = index
-    x = coordinate_x
-    y = coordinate_y
-    
     try:
-        browser_instance.ensure_browser()
+        context = await get_browser_context()
         
         if index is not None:
-            # Click by element index
-            elements = browser_instance.page.query_selector_all("a, button, input[type='submit'], input[type='button'], div[role='button'], [onclick]")
-            if 0 <= index < len(elements):
-                elements[index].click()
+            # Get the current state to access the selector map
+            state = await context.get_state()
+            
+            if index not in state.selector_map:
+                return f"Error: Element with index {index} not found in current page"
+            
+            # Get the element
+            element_node = state.selector_map[index]
+            
+            # Use the browser-use click_element_node method
+            try:
+                await context._click_element_node(element_node)
                 return f"Clicked on element at index {index}"
-            else:
-                return f"Error: Index {index} is out of range (0-{len(elements)-1})"
-        elif x is not None and y is not None:
-            # Click by coordinates
-            browser_instance.page.mouse.click(x, y)
-            return f"Clicked at coordinates ({x}, {y})"
+            except Exception as e:
+                return f"Error clicking element: {str(e)}"
+        elif coordinate_x is not None and coordinate_y is not None:
+            # Click by coordinates using page.mouse.click()
+            page = await context.get_current_page()
+            await page.mouse.click(coordinate_x, coordinate_y)
+            return f"Clicked at coordinates ({coordinate_x}, {coordinate_y})"
         else:
             return "Error: Either index or coordinates (x, y) must be provided"
     
@@ -645,42 +642,49 @@ def browser_click(
         return f"Error clicking: {str(e)}"
 
 @mcp.tool()
-def browser_input(
-    index: Optional[int] = Field(default=None, description="(Optional) Index number of the element to overwrite text"),
-    coordinate_x: Optional[float] = Field(default=None, description="(Optional) X coordinate of the element to overwrite text"),
-    coordinate_y: Optional[float] = Field(default=None, description="(Optional) Y coordinate of the element to overwrite text"),
-    text: str = Field(description="Complete text content to overwrite"),
+async def browser_input(
+    index: Optional[int] = Field(default=None, description="(Optional) Index number of the element to input text"),
+    coordinate_x: Optional[float] = Field(default=None, description="(Optional) X coordinate of the element to input text"),
+    coordinate_y: Optional[float] = Field(default=None, description="(Optional) Y coordinate of the element to input text"),
+    text: str = Field(description="Complete text content to input"),
     press_enter: bool = Field(description="Whether to press Enter key after input")
 ) -> str:
-    """Overwrite text in editable elements on the current browser page. Use when filling content in input fields."""
-    index = index
-    x = coordinate_x
-    y = coordinate_y
-    text = text
-    press_enter = press_enter
-    
+    """Input text in editable elements on the current browser page. Use when filling content in input fields."""
     try:
-        browser_instance.ensure_browser()
+        context = await get_browser_context()
         
         if index is not None:
-            # Input by element index
-            elements = browser_instance.page.query_selector_all("input:not([type='submit']):not([type='button']), textarea, [contenteditable='true']")
-            if 0 <= index < len(elements):
-                element = elements[index]
-                element.click()
-                element.fill(text)
+            # Get the current state to access the selector map
+            state = await context.get_state()
+            
+            if index not in state.selector_map:
+                return f"Error: Element with index {index} not found in current page"
+            
+            # Get the element
+            element_node = state.selector_map[index]
+            
+            # Use the browser-use input_text_element_node method
+            try:
+                await context._input_text_element_node(element_node, text)
+                
+                # Handle Enter keypress if requested
                 if press_enter:
-                    element.press("Enter")
-                return f"Text input completed at element index {index}"
-            else:
-                return f"Error: Index {index} is out of range (0-{len(elements)-1})"
-        elif x is not None and y is not None:
-            # Input by coordinates
-            browser_instance.page.mouse.click(x, y)
-            browser_instance.page.keyboard.type(text)
+                    page = await context.get_current_page()
+                    await page.keyboard.press("Enter")
+                
+                return f"Entered text into element at index {index}"
+            except Exception as e:
+                return f"Error entering text: {str(e)}"
+        elif coordinate_x is not None and coordinate_y is not None:
+            # Click on coordinates and then type
+            page = await context.get_current_page()
+            await page.mouse.click(coordinate_x, coordinate_y)
+            await page.keyboard.type(text)
+            
             if press_enter:
-                browser_instance.page.keyboard.press("Enter")
-            return f"Text input completed at coordinates ({x}, {y})"
+                await page.keyboard.press("Enter")
+            
+            return f"Entered text at coordinates ({coordinate_x}, {coordinate_y})"
         else:
             return "Error: Either index or coordinates (x, y) must be provided"
     
@@ -688,126 +692,121 @@ def browser_input(
         return f"Error inputting text: {str(e)}"
 
 @mcp.tool()
-def browser_move_mouse(
+async def browser_move_mouse(
     coordinate_x: float = Field(description="X coordinate of target cursor position"),
     coordinate_y: float = Field(description="Y coordinate of target cursor position")
 ) -> str:
     """Move cursor to specified position on the current browser page. Use when simulating user mouse movement."""
-    x = coordinate_x
-    y = coordinate_y
-    
     try:
-        browser_instance.ensure_browser()
-        browser_instance.page.mouse.move(x, y)
-        return f"Mouse moved to coordinates ({x}, {y})"
+        context = await get_browser_context()
+        page = await context.get_current_page()
+        await page.mouse.move(coordinate_x, coordinate_y)
+        return f"Mouse moved to coordinates ({coordinate_x}, {coordinate_y})"
     except Exception as e:
         return f"Error moving mouse: {str(e)}"
 
 @mcp.tool()
-def browser_press_key(key: str = Field(description="Key name to simulate (e.g., Enter, Tab, ArrowUp), supports key combinations (e.g., Control+Enter).")) -> str:
+async def browser_press_key(key: str = Field(description="Key name to simulate (e.g., Enter, Tab, ArrowUp), supports key combinations (e.g., Control+Enter).")) -> str:
     """Simulate key press in the current browser page. Use when specific keyboard operations are needed."""
-    key = key
-    
     try:
-        browser_instance.ensure_browser()
-        browser_instance.page.keyboard.press(key)
+        context = await get_browser_context()
+        page = await context.get_current_page()
+        await page.keyboard.press(key)
         return f"Key press simulated: {key}"
     except Exception as e:
         return f"Error pressing key: {str(e)}"
 
 @mcp.tool()
-def browser_select_option(
+async def browser_select_option(
     index: int = Field(description="Index number of the dropdown list element"),
-    option: int = Field(description="Option number to select, starting from 0.")
+    option_text: str = Field(description="Text of the option to select")
 ) -> str:
     """Select specified option from dropdown list element in the current browser page. Use when selecting dropdown menu options."""
-    index = index
-    option = option
-    
     try:
-        browser_instance.ensure_browser()
+        context = await get_browser_context()
+        state = await context.get_state()
         
-        # Get all select elements
-        select_elements = browser_instance.page.query_selector_all("select")
+        if index not in state.selector_map:
+            return f"Error: Dropdown with index {index} not found in current page"
         
-        if 0 <= index < len(select_elements):
-            select_element = select_elements[index]
+        element_node = state.selector_map[index]
+        
+        if element_node.tag_name.lower() != 'select':
+            return f"Error: Element with index {index} is not a select dropdown"
+        
+        # Get the page to use select_option
+        page = await context.get_current_page()
+        
+        # Handle selection through browser-use API
+        try:
+            element_handle = await context.get_locate_element(element_node)
+            if not element_handle:
+                return f"Error: Could not locate element in DOM"
             
-            # Get all options in this select element
-            options = select_element.query_selector_all("option")
-            
-            if 0 <= option < len(options):
-                option_value = options[option].get_attribute("value")
-                select_element.select_option(value=option_value)
-                return f"Selected option {option} from dropdown at index {index}"
-            else:
-                return f"Error: Option {option} is out of range (0-{len(options)-1})"
-        else:
-            return f"Error: Index {index} is out of range (0-{len(select_elements)-1})"
+            await element_handle.select_option(label=option_text)
+            return f"Selected option '{option_text}' from dropdown at index {index}"
+        except Exception as e:
+            return f"Error selecting option: {str(e)}"
     
     except Exception as e:
         return f"Error selecting option: {str(e)}"
 
 @mcp.tool()
-def browser_scroll_up(to_top: bool = Field(description="Whether to scroll directly to page top instead of one viewport up.")) -> str:
+async def browser_scroll_up(to_top: bool = Field(description="Whether to scroll directly to page top instead of one viewport up.")) -> str:
     """Scroll up the current browser page. Use when viewing content above or returning to page top."""
-    to_top = to_top
-    
     try:
-        browser_instance.ensure_browser()
+        context = await get_browser_context()
+        page = await context.get_current_page()
         
         if to_top:
-            browser_instance.page.evaluate("window.scrollTo(0, 0)")
+            await page.evaluate("window.scrollTo(0, 0)")
             return "Scrolled to page top"
         else:
-            viewport_height = browser_instance.page.evaluate("window.innerHeight")
-            browser_instance.page.evaluate(f"window.scrollBy(0, -{viewport_height})")
+            viewport_height = await page.evaluate("window.innerHeight")
+            await page.evaluate(f"window.scrollBy(0, -{viewport_height})")
             return "Scrolled up one viewport"
     
     except Exception as e:
         return f"Error scrolling up: {str(e)}"
 
 @mcp.tool()
-def browser_scroll_down(to_bottom: bool = Field(description="Whether to scroll directly to page bottom instead of one viewport down.")) -> str:
+async def browser_scroll_down(to_bottom: bool = Field(description="Whether to scroll directly to page bottom instead of one viewport down.")) -> str:
     """Scroll down the current browser page. Use when viewing content below or jumping to page bottom."""
-    to_bottom = to_bottom
-    
     try:
-        browser_instance.ensure_browser()
+        context = await get_browser_context()
+        page = await context.get_current_page()
         
         if to_bottom:
-            browser_instance.page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+            await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
             return "Scrolled to page bottom"
         else:
-            viewport_height = browser_instance.page.evaluate("window.innerHeight")
-            browser_instance.page.evaluate(f"window.scrollBy(0, {viewport_height})")
+            viewport_height = await page.evaluate("window.innerHeight")
+            await page.evaluate(f"window.scrollBy(0, {viewport_height})")
             return "Scrolled down one viewport"
     
     except Exception as e:
         return f"Error scrolling down: {str(e)}"
 
 @mcp.tool()
-def browser_console_exec(javascript: str = Field(description="JavaScript code to execute. Note that the runtime environment is browser console.")) -> str:
+async def browser_console_exec(javascript: str = Field(description="JavaScript code to execute. Note that the runtime environment is browser console.")) -> str:
     """Execute JavaScript code in browser console. Use when custom scripts need to be executed."""
-    javascript = javascript
-    
     try:
-        browser_instance.ensure_browser()
-        result = browser_instance.page.evaluate(javascript)
+        context = await get_browser_context()
+        page = await context.get_current_page()
+        result = await page.evaluate(javascript)
         return f"JavaScript executed successfully. Result: {result}"
     except Exception as e:
         return f"Error executing JavaScript: {str(e)}"
 
 @mcp.tool()
-def browser_console_view(max_lines: Optional[int] = Field(default=100, description="(Optional) Maximum number of log lines to return.")) -> str:
+async def browser_console_view(max_lines: Optional[int] = Field(default=100, description="(Optional) Maximum number of log lines to return.")) -> str:
     """View browser console output. Use when checking JavaScript logs or debugging page errors."""
-    max_lines = max_lines
-    
     try:
-        browser_instance.ensure_browser()
+        context = await get_browser_context()
+        page = await context.get_current_page()
         
-        # Execute JavaScript to get console logs (this is a simplification and might require adjustment)
-        logs = browser_instance.page.evaluate(f"""() => {{
+        # Execute JavaScript to get console logs
+        logs = await page.evaluate(f"""() => {{
             const maxLogs = {max_lines};
             if (window._consoleLogs === undefined) {{
                 window._consoleLogs = [];
