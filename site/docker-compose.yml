@@ -1,0 +1,11 @@
+services:
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    command: --config litellm.yml
+    ports:
+      - "8004:4000"
+    volumes:
+      - ./litellm.yml:/app/config/litellm.yml
+    restart: unless-stopped
+    env_file:
+      - .env

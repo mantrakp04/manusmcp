@@ -1,13 +1,15 @@
 import "dotenv/config";
-import { StateGraph, Annotation, START, END, MemorySaver } from "@langchain/langgraph";
+import { StateGraph, Annotation, START, END } from "@langchain/langgraph";
 import { HumanMessage } from "@langchain/core/messages";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { z } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
+import { SqliteSaver } from "@langchain/langgraph-checkpoint-sqlite";
 
 import { model } from "./model";
 import supervisor from "./supervisor";
 import { type RunnableConfig } from "@langchain/core/runnables";
+import { sessionManager } from "./tools";
 
 // Schemas
 // Plan related schemas
@@ -64,15 +66,15 @@ const AgentState = Annotation.Root({
 async function planStep(state: typeof AgentState.State, config?: RunnableConfig): Promise<Partial<typeof AgentState.State>> {
   const prompt = ChatPromptTemplate.fromTemplate(
     `
-    You are a planner that breaks down a complex task into high-level steps and expands them into detailed hierarchical plans.
-    For the following task:
-    {input}
+You are a planner that breaks down a complex task into high-level steps and expands them into detailed hierarchical plans.
+For the following task:
+{input}
 
-    Create a list of 1-7 high-level sequential steps to accomplish this task.
-    Each step should be a clear, actionable item that leads towards the final goal.
-    For each high-level step, create a detailed expansion with:
-    1. A clear description of the step
-    2. 1-4 substeps that break down how to accomplish this step, depending on the complexity of the step.
+Create a list of 1-7 high-level sequential steps to accomplish this task.
+Each step should be a clear, actionable item that leads towards the final goal.
+For each high-level step, create a detailed expansion with:
+1. A clear description of the step
+2. 1-4 substeps that break down how to accomplish this step, depending on the complexity of the step.
     `
   )
   const chain = prompt.pipe(model.withStructuredOutput(plan))
@@ -151,26 +153,48 @@ function continueOrRespond(state: typeof AgentState.State): string {
   return state.response ? "true" : "false";
 }
 
+// Step 5: Clean up any session resources when done responding to user
+async function cleanup(state: typeof AgentState.State, config?: RunnableConfig): Promise<Partial<typeof AgentState.State>> {
+  // Get thread_id from config
+  const threadId = config?.configurable?.thread_id as string;
+  
+  if (threadId) {
+    try {
+      // Clean up session resources
+      await sessionManager.clearSession(threadId);
+      console.log(`Cleaned up session resources for thread ID: ${threadId}`);
+    } catch (error) {
+      console.error(`Error cleaning up session resources for thread ID: ${threadId}`, error);
+    }
+  }
+  
+  // Return the state unchanged
+  return {};
+}
+
 const workflow = new StateGraph(AgentState)
   .addNode("planner", planStep)
   .addNode("supervisor", agentExecutor)
   .addNode("replan", replanStep)
+  .addNode("cleanup", cleanup)
   .addEdge(START, "planner")
   .addEdge("planner", "supervisor")
   .addConditionalEdges("supervisor", continueOrRespond, {
-    true: END,
+    true: "cleanup",
     false: "replan"
   })
+  .addEdge("cleanup", END)
 
 // export const memory = SqliteSaver.fromConnString(env.DATABASE_URL)
-const app = workflow.compile();
+const memory = SqliteSaver.fromConnString("checkpoints.db");
+const app = workflow.compile({ checkpointer: memory });
 
 export default app;
 
 // Test
 const test = async () => {
   for await (const event of app.streamEvents(
-    { input: "Deepanalyze fish food companies" },
+    { input: "Deepanalyze fish food companies, use duck duck go as the search engine" },
     { configurable: { thread_id: "123" }, version: "v2" }
   )) {
     console.log(`${event.event}: ${event.name}`);

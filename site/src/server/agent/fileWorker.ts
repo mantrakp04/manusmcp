@@ -2,13 +2,24 @@ import "dotenv/config";
 import { StateGraph, MessagesAnnotation, Command, START, END } from "@langchain/langgraph";
 import { createReactAgent, ToolNode } from "@langchain/langgraph/prebuilt";
 import { SystemMessage, ToolMessage } from "@langchain/core/messages";
-import { RunnableConfig } from "@langchain/core/runnables";
+import { type RunnableConfig } from "@langchain/core/runnables";
 
 import { model } from "./model";
-import { fileTools } from "./tools";
+import { sessionManager } from "./tools";
 
-const fileToolNode = new ToolNode(fileTools);
-const modelWithTools = model.bindTools(fileTools);
+// File tool node will be initialized per call based on thread_id
+const getFileToolNode = (config?: RunnableConfig) => {
+  const threadId = config?.configurable?.thread_id as string || "default";
+  const services = sessionManager.getSessionServices(threadId);
+  return new ToolNode(services.file.fileTools);
+};
+
+// Create a function to get thread-specific file tools and bind them to model
+const getModelWithTools = (config?: RunnableConfig) => {
+  const threadId = config?.configurable?.thread_id as string || "default";
+  const services = sessionManager.getSessionServices(threadId);
+  return model.bindTools(services.file.fileTools);
+};
 
 const shouldContinue = (state: typeof MessagesAnnotation.State) => {
   const { messages } = state;
@@ -21,12 +32,18 @@ const shouldContinue = (state: typeof MessagesAnnotation.State) => {
 
 const callModel = async (state: typeof MessagesAnnotation.State, config?: RunnableConfig) => {
   const { messages } = state;
+  const modelWithTools = getModelWithTools(config);
   const response = await modelWithTools.invoke(messages, config);
   return { messages: response };
 }
 
 const callFileToolNode = async (state: typeof MessagesAnnotation.State, config?: RunnableConfig) => {
   const { messages } = state;
+  const fileToolNode = getFileToolNode(config);
+  const threadId = config?.configurable?.thread_id as string || "default";
+  const services = sessionManager.getSessionServices(threadId);
+  const fileTools = services.file.fileTools;
+  
   const response = await fileToolNode.invoke({ messages: [messages[messages.length - 1]] }, config);
   const toolMessages = response.messages as ToolMessage[];
   for (const toolMessage of toolMessages && toolMessages.length > 0 ? toolMessages : []) {
@@ -64,9 +81,13 @@ const callFileToolNode = async (state: typeof MessagesAnnotation.State, config?:
 }
 
 const writeFileContent = async (state: typeof MessagesAnnotation.State, config?: RunnableConfig) => {
+  const threadId = config?.configurable?.thread_id as string || "default";
+  const services = sessionManager.getSessionServices(threadId);
+  const fileWriteTools = services.file.fileTools.filter((tool) => tool.name === "file_write");
+  
   const writeFileAgent = createReactAgent({
     llm: model,
-    tools: fileTools.filter((tool) => tool.name === "file_write"),
+    tools: fileWriteTools,
     stateModifier: new SystemMessage(
       "You are an expert at synthesizing content according to the provided instructions and conversation history." +
       "{instruction}" +

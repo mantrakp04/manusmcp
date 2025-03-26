@@ -3,21 +3,16 @@ import { StateGraph, Annotation, START, END, interrupt } from "@langchain/langgr
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { BaseMessage, HumanMessage, SystemMessage, AIMessage } from "@langchain/core/messages";
 import { ChatPromptTemplate, MessagesPlaceholder } from "@langchain/core/prompts";
-import { RunnableConfig } from "@langchain/core/runnables";
+import { type RunnableConfig } from "@langchain/core/runnables";
 
 // Import your model and tools definition from the main file
 import { model } from "./model";
-import { shellTools, browserTools } from "./tools";
+import { sessionManager } from "./tools";
 import fileWorker from "./fileWorker";
 import kbWorker from "./kbWorker";
 
 // Define state schema for the supervisor subgraph
 const SupervisorState = Annotation.Root({
-  // State that will be shared with the parent graph
-  // task: Annotation<string>({
-  //   reducer: (x, y) => y ?? x ?? "",
-  //   default: () => "",
-  // }),
   messages: Annotation<BaseMessage[]>({
     reducer: (x, y) => x.concat(y),
     default: () => [],
@@ -37,6 +32,13 @@ const shellWorkerNode = async (
   state: typeof SupervisorState.State,
   config?: RunnableConfig
 ): Promise<Partial<typeof SupervisorState.State>> => {
+  // Get thread_id from config to use as session ID
+  const threadId = config?.configurable?.thread_id as string || "default";
+  
+  // Get shell tools for this specific session
+  const services = sessionManager.getSessionServices(threadId);
+  const shellTools = services.shell.shellTools;
+  
   const shellAgent = createReactAgent({
     llm: model,
     tools: shellTools,
@@ -57,8 +59,7 @@ const shellWorkerNode = async (
   return {
     messages: [
       new HumanMessage({ 
-        content: lastMessage?.content ?? "", 
-        name: "ShellWorker" 
+        content: `[ShellWorker] ${lastMessage?.content ?? ""}`, 
       })
     ]
   };
@@ -69,6 +70,13 @@ const browserWorkerNode = async (
   state: typeof SupervisorState.State,
   config?: RunnableConfig
 ): Promise<Partial<typeof SupervisorState.State>> => {
+  // Get thread_id from config to use as session ID
+  const threadId = config?.configurable?.thread_id as string || "default";
+  
+  // Get browser tools for this specific session
+  const services = sessionManager.getSessionServices(threadId);
+  const browserTools = services.browser.browserTools;
+  
   const browserAgent = createReactAgent({
     llm: model,
     tools: browserTools,
@@ -89,8 +97,7 @@ const browserWorkerNode = async (
   return {
     messages: [
       new HumanMessage({ 
-        content: lastMessage?.content ?? "", 
-        name: "BrowserWorker"
+        content: `[BrowserWorker] ${lastMessage?.content ?? ""}`, 
       })
     ]
   };
@@ -111,8 +118,7 @@ const askUserNode = async (
   return {
     messages: [
       new HumanMessage({ 
-        content: userInput ?? "", 
-        name: "User" 
+        content: `[User] ${userInput ?? ""}`, 
       })
     ]
   };
@@ -133,8 +139,7 @@ const updateUserNode = async (
   return {
     messages: [
       new AIMessage({ 
-        content: "Information shared with user", 
-        name: "System" 
+        content: `[System] Information shared with user`, 
       })
     ]
   };
@@ -147,16 +152,16 @@ const members = ["file_worker", "shell_worker", "browser_worker", "kb_worker", "
 const supervisorNode = async (state: typeof SupervisorState.State, config?: RunnableConfig) => {
   // Create the routing prompt
   const systemPrompt = `
-You are a supervisor tasked with routing tasks to specialized workers.
-Available workers:
-- file_worker: Handles file operations, reading, writing, and file management
-- shell_worker: Executes shell commands and scripts
-- browser_worker: Handles web browsing, searching, and information retrieval
-- kb_worker: Retrieves information from the knowledge base using RAG (Retrieval-Augmented Generation)
-- ask_user: Requests input or information from the human user
-- update_user: Provides updates, status information, or results to the human user
-Given the task description and substeps, select the most appropriate worker.
-If the task is complete, respond with END.
+    You are a supervisor tasked with routing tasks to specialized workers.
+    Available workers:
+    - file_worker: Handles file operations, reading, writing, and file management
+    - shell_worker: Executes shell commands and scripts
+    - browser_worker: Handles web browsing, searching, and information retrieval
+    - kb_worker: Retrieves information from the knowledge base using RAG (Retrieval-Augmented Generation)
+    - ask_user: Requests input or information from the human user
+    - update_user: Provides updates, status information, or results to the human user
+    Given the task description and substeps, select the most appropriate worker.
+    If the task is complete, respond with END.
 `;
 
   const routingPrompt = ChatPromptTemplate.fromMessages([

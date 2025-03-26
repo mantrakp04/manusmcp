@@ -11,8 +11,8 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
-    GRADIO_OMNI_PARSER_V2_CLIENT: z.string().url().default("ginigen/OmniParser-v2-pro"),
-    VECTOR_STORE_PATH: z.string().default("vector_store"),
+    GRADIO_OMNI_PARSER_V2_CLIENT: z.string().default("ginigen/OmniParser-v2-pro"),
+    VECTOR_STORE_PATH: z.string().default("./data/vector_store"),
   },
 
   /**

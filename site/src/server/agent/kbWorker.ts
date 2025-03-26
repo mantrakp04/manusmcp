@@ -1,9 +1,8 @@
 import "dotenv/config";
 import { StateGraph, MessagesAnnotation, Command, START, END } from "@langchain/langgraph";
-import { BaseMessage, HumanMessage, SystemMessage, AIMessage, ToolMessage } from "@langchain/core/messages";
-import { ChatPromptTemplate, MessagesPlaceholder } from "@langchain/core/prompts";
+import { AIMessage, ToolMessage } from "@langchain/core/messages";
+import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { type RunnableConfig } from "@langchain/core/runnables";
-import { createReactAgent, ToolNode } from "@langchain/langgraph/prebuilt";
 import { FaissStore } from "@langchain/community/vectorstores/faiss";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import path from "path";
