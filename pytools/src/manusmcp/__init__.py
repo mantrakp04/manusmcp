@@ -7,7 +7,7 @@ from .tools import mcp, sessions, ShellSession
 from . import config
 
 def main():
-    mcp.run()
+    mcp.run(transport="sse")
 
 if __name__ == "__main__":
     main()

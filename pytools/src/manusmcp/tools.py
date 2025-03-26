@@ -514,65 +514,26 @@ def file_find_by_name(
         return f"Error searching for files: {str(e)}"
 
 @mcp.tool()
-def browser_view() -> Dict[str, Any]:
+async def browser_view() -> Dict[str, Any]:
     """View content of the current browser page. Use for checking the latest state of previously opened pages."""
     try:
-        browser_instance.ensure_browser()
-        if browser_instance.page is None:
-            return {"error": "Browser page not initialized"}
+        context = await get_browser_context()
+        state = await context.get_state()
         
-        # Take screenshot
-        screenshot_bytes = browser_instance.page.screenshot()
+        # Get screenshot
+        screenshot_base64 = state.screenshot
         
-        # Create a temporary file to store the screenshot
-        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_file:
-            temp_file_path = temp_file.name
-            temp_file.write(screenshot_bytes)
+        # Get text content from DOM
+        elements_text = state.element_tree.clickable_elements_to_string()
         
-        try:
-            # Use OmniParser to extract text from the screenshot
-            result = client.predict(
-                "/process",
-                [
-                    temp_file_path,  # image_input
-                    0.05,            # box_threshold
-                    0.1,             # iou_threshold
-                    True,            # use_paddleocr
-                    640              # imgsz
-                ]
-            )
-            
-            # Extract the parsed text from the result
-            parsed_screenshot_bytes = None
-            parsed_text = None
-            
-            if isinstance(result, list) and len(result) > 1:
-                parsed_screenshot_bytes = result[0]
-                parsed_text = result[1]
-            else:
-                raise ValueError("Invalid result format from OmniParser")
-            
-            # Convert bytes to base64 strings
-            screenshot_base64 = base64.b64encode(screenshot_bytes).decode('utf-8')
-            parsed_screenshot_base64 = base64.b64encode(parsed_screenshot_bytes).decode('utf-8') if parsed_screenshot_bytes else None
-            
-            return {
-                "content": [
-                    {"type": "image", "data": f"data:image/png;base64,{screenshot_base64}"},
-                    {"type": "image", "data": f"data:image/png;base64,{parsed_screenshot_base64}"},
-                    {"type": "text", "text": parsed_text}
-                ]
-            }
-            
-        except Exception as e:
-            return {"error": f"Error processing screenshot: {str(e)}"}
-        finally:
-            # Clean up the temporary file
-            if os.path.exists(temp_file_path):
-                os.unlink(temp_file_path)
-    
+        return {
+            "content": [
+                {"type": "image", "data": f"data:image/png;base64,{screenshot_base64}"},
+                {"type": "text", "text": f"Current URL: {state.url}\nTitle: {state.title}\n\nAvailable tabs:\n{state.tabs}\n\nInteractive elements:\n{elements_text}"}
+            ]
+        }
     except Exception as e:
-        return {"error": f"Error taking screenshot: {str(e)}"}
+        return {"error": f"Error processing screenshot: {str(e)}"}
 
 @mcp.tool()
 async def browser_navigate(url: str = Field(description="Complete URL to visit. Must include protocol prefix.")) -> str:
