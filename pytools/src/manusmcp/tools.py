@@ -8,7 +8,7 @@ import tempfile
 from typing import Optional, Dict, Any
 from pydantic import BaseModel, Field
 
-from mcp.server.fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP, Image
 from browser_use.browser.browser import Browser, BrowserConfig
 from browser_use.browser.context import BrowserContext, BrowserContextConfig
 from browser_use.agent.views import ActionResult
@@ -326,13 +326,7 @@ def file_read_image(
         # Encode image data as base64
         image_base64 = base64.b64encode(image_bytes).decode('utf-8')
         
-        return {
-            "content": [
-                {"type": "image", "data": f"data:{content_type};base64,{image_base64}"}
-            ],
-            "filename": os.path.basename(file_path),
-            "file_size": len(image_bytes)
-        }
+        return Image(data=image_base64)
     except Exception as e:
         return {"error": f"Error reading image file: {str(e)}"}
 
@@ -526,12 +520,10 @@ async def browser_view() -> Dict[str, Any]:
         # Get text content from DOM
         elements_text = state.element_tree.clickable_elements_to_string()
         
-        return {
-            "content": [
-                {"type": "image", "data": f"data:image/png;base64,{screenshot_base64}"},
-                {"type": "text", "text": f"Current URL: {state.url}\nTitle: {state.title}\n\nAvailable tabs:\n{state.tabs}\n\nInteractive elements:\n{elements_text}"}
-            ]
-        }
+        return [
+            Image(data=screenshot_base64, format="jpeg"),
+            f"Current URL: {state.url}\nTitle: {state.title}\n\nAvailable tabs:\n{state.tabs}\n\nInteractive elements:\n{elements_text}"
+        ]
     except Exception as e:
         return {"error": f"Error processing screenshot: {str(e)}"}
 
