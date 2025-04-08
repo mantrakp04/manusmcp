@@ -1,0 +1,7 @@
+{
+  "dependencies": ["."],
+  "graphs": {
+    "openmanus": "./src/main.py:app"
+  },
+  "env": ".env"
+}

@@ -1,3 +1,13 @@
-.env
-__pycache__
-.flowise
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+.env*
+*.sqlite*
+test-results/

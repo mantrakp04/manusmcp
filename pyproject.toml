@@ -1,0 +1,27 @@
+[project]
+name = "openmanus"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiosqlite>=0.21.0",
+    "browser-use>=0.1.40",
+    "crawl4ai>=0.5.0.post8",
+    "langchain-community>=0.3.21",
+    "langchain-litellm>=0.1.4",
+    "langchain-mcp-adapters>=0.0.7",
+    "langchain-openai>=0.3.1",
+    "langchain-qdrant>=0.2.0",
+    "langgraph>=0.3.25",
+    "langgraph-checkpoint-sqlite>=2.0.6",
+    "litellm>=1.65.4.post1",
+    "markitdown[all]>=0.1.1",
+    "mcp[cli]>=1.6.0",
+    "python-dotenv>=1.1.0",
+]
+
+[dependency-groups]
+dev = [
+    "langgraph-cli[inmem]>=0.1.89",
+]

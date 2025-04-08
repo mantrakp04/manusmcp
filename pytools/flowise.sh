@@ -1,1 +1,0 @@
-DEBUG=true DATABASE_PATH="./.flowise" BLOB_STORAGE_PATH="./.flowise/storage" APIKEY_STORAGE_TYPE="db" bunx flowise@latest start
